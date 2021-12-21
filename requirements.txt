@@ -1,0 +1,4 @@
+pyopengl
+pygame
+common-game-maths
+Pillow

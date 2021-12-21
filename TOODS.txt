@@ -1,0 +1,9 @@
+Improve lighting
+Add textures
+
+Player health
+Proper networking
+Map design
+
+(UI?)
+(Crosshair)
