@@ -1,5 +1,6 @@
 Improve lighting
 Add textures
+Skybox
 
 Player health
 Proper networking
