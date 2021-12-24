@@ -111,14 +111,14 @@ class Cube(GameObject):
             glActiveTexture(GL_TEXTURE0)
             glBindTexture(GL_TEXTURE_2D, self.texture_id)
             
-            shader.set_diffuse_texture(0)
+            # shader.set_diffuse_texture(0)
             shader.set_model_matrix(modelMatrix.matrix)
             # shader.set_material_diffuse(self.color[0], self.color[1], self.color[2])
             shader.set_material_diffuse(1, 1, 1) # TEMPORARY
             shader.set_material_specular(0.6282, 0.5558, 0.3660)
             shader.set_material_shininess(100)
             
-            self.cube.draw(shader, update_shader)
+            self.cube.draw(shader)
             modelMatrix.pop_matrix()
 
     def update(self, delta_time, game_objects):

@@ -6,97 +6,50 @@ import numpy
 
 class CubeObject:
     def __init__(self):
-        self.position_array = [-0.5, -0.5, -0.5,
-                            -0.5, 0.5, -0.5,
-                            0.5, 0.5, -0.5,
-                            0.5, -0.5, -0.5,
-                            -0.5, -0.5, 0.5,
-                            -0.5, 0.5, 0.5,
-                            0.5, 0.5, 0.5,
-                            0.5, -0.5, 0.5,
-                            -0.5, -0.5, -0.5,
-                            0.5, -0.5, -0.5,
-                            0.5, -0.5, 0.5,
-                            -0.5, -0.5, 0.5,
-                            -0.5, 0.5, -0.5,
-                            0.5, 0.5, -0.5,
-                            0.5, 0.5, 0.5,
-                            -0.5, 0.5, 0.5,
-                            -0.5, -0.5, -0.5,
-                            -0.5, -0.5, 0.5,
-                            -0.5, 0.5, 0.5,
-                            -0.5, 0.5, -0.5,
-                            0.5, -0.5, -0.5,
-                            0.5, -0.5, 0.5,
-                            0.5, 0.5, 0.5,
-                            0.5, 0.5, -0.5]
-        self.normal_array = [0.0, 0.0, -1.0,
-                            0.0, 0.0, -1.0,
-                            0.0, 0.0, -1.0,
-                            0.0, 0.0, -1.0,
-                            0.0, 0.0, 1.0,
-                            0.0, 0.0, 1.0,
-                            0.0, 0.0, 1.0,
-                            0.0, 0.0, 1.0,
-                            0.0, -1.0, 0.0,
-                            0.0, -1.0, 0.0,
-                            0.0, -1.0, 0.0,
-                            0.0, -1.0, 0.0,
-                            0.0, 1.0, 0.0,
-                            0.0, 1.0, 0.0,
-                            0.0, 1.0, 0.0,
-                            0.0, 1.0, 0.0,
-                            -1.0, 0.0, 0.0,
-                            -1.0, 0.0, 0.0,
-                            -1.0, 0.0, 0.0,
-                            -1.0, 0.0, 0.0,
-                            1.0, 0.0, 0.0,
-                            1.0, 0.0, 0.0,
-                            1.0, 0.0, 0.0,
-                            1.0, 0.0, 0.0]
-        self.uv_array = [0.0, 0.0,
-                         0.0, 1.0,
-                         1.0, 1.0,
-                         1.0, 0.0,
-                         0.0, 0.0,
-                         0.0, 1.0,
-                         1.0, 1.0,
-                         1.0, 0.0,
-                         0.0, 0.0,
-                         0.0, 1.0,
-                         1.0, 1.0,
-                         1.0, 0.0,
-                         0.0, 0.0,
-                         0.0, 1.0,
-                         1.0, 1.0,
-                         1.0, 0.0,
-                         0.0, 0.0,
-                         0.0, 1.0,
-                         1.0, 1.0,
-                         1.0, 0.0,
-                         0.0, 0.0,
-                         0.0, 1.0,
-                         1.0, 1.0,
-                         1.0, 0.0]
-    
-    def set_vertecies(self, shader:Shader3D):
-        shader.set_position_attribute(self.position_array)
-        shader.set_normal_attribute(self.normal_array)
-        shader.set_uv_attribute(self.uv_array)
+        cube_array = [
+            #position           normals             uv
+            -0.5, -0.5, -0.5,   0.0, 0.0, -1.0,     0.0, 0.0,
+            -0.5, 0.5, -0.5,    0.0, 0.0, -1.0,     0.0, 1.0,
+            0.5, 0.5, -0.5,     0.0, 0.0, -1.0,     1.0, 1.0,
+            0.5, -0.5, -0.5,    0.0, 0.0, -1.0,     1.0, 0.0,
 
-    def draw(self, shader, update_shader=False, texture=False):
-        if update_shader:
-            shader.set_position_attribute(self.position_array)
-            shader.set_normal_attribute(self.normal_array)
-        
-        if texture != None:
-            pass
+            -0.5, -0.5, 0.5,    0.0, 0.0, 1.0,      0.0, 0.0,
+            -0.5, 0.5, 0.5,     0.0, 0.0, 1.0,      0.0, 1.0,
+            0.5, 0.5, 0.5,      0.0, 0.0, 1.0,      1.0, 1.0,
+            0.5, -0.5, 0.5,     0.0, 0.0, 1.0,      1.0, 0.0,
 
-        draw_method = GL_TRIANGLE_FAN 
-        glDrawArrays(draw_method, 0, 4)
-        glDrawArrays(draw_method, 4, 4)
-        glDrawArrays(draw_method, 8, 4)
-        glDrawArrays(draw_method, 12, 4)
-        glDrawArrays(draw_method, 16, 4)
-        glDrawArrays(draw_method, 20, 4)
+            -0.5, -0.5, -0.5,   0.0, -1.0, 0.0,     0.0, 0.0,
+            0.5, -0.5, -0.5,    0.0, -1.0, 0.0,     0.0, 1.0,
+            0.5, -0.5, 0.5,     0.0, -1.0, 0.0,     1.0, 1.0,
+            -0.5, -0.5, 0.5,    0.0, -1.0, 0.0,     1.0, 1.0,
+
+            -0.5, 0.5, -0.5,    0.0, 1.0, 0.0,      0.0, 0.0,
+            0.5, 0.5, -0.5,     0.0, 1.0, 0.0,      0.0, 1.0,
+            0.5, 0.5, 0.5,      0.0, 1.0, 0.0,      1.0, 1.0,
+            -0.5, 0.5, 0.5,     0.0, 1.0, 0.0,      1.0, 0.0,
+
+            -0.5, -0.5, -0.5,   -1.0, 0.0, 0.0,     0.0, 0.0,
+            -0.5, -0.5, 0.5,    -1.0, 0.0, 0.0,     0.0, 1.0,
+            -0.5, 0.5, 0.5,     -1.0, 0.0, 0.0,     1.0, 1.0,
+            -0.5, 0.5, -0.5,    -1.0, 0.0, 0.0,     1.0, 0.0,
+
+            0.5, -0.5, -0.5,    1.0, 0.0, 0.0,      0.0, 0.0,
+            0.5, -0.5, 0.5,     1.0, 0.0, 0.0,      0.0, 1.0,
+            0.5, 0.5, 0.5,      1.0, 0.0, 0.0,      1.0, 1.0,
+            0.5, 0.5, -0.5,     1.0, 0.0, 0.0,      1.0, 0.0
+        ]
         
+        self.vertex_buffer_id = glGenBuffers(1)
+        glBindBuffer(GL_ARRAY_BUFFER, self.vertex_buffer_id)
+        glBufferData(GL_ARRAY_BUFFER, numpy.array(cube_array, dtype='float32'), GL_STATIC_DRAW)
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
+
+    # Draw fuction for a primitive cube object
+    # (parameters are leftover from old code)
+    def draw(self, shader):
+        shader.set_attrib_buffers_tex(self.vertex_buffer_id)
+
+        for i in range(0, 6):
+            glDrawArrays(GL_TRIANGLE_FAN, i * 4, 4)
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0)

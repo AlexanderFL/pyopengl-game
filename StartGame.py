@@ -53,8 +53,17 @@ class StartGame:
 
         self.angle = 0
 
+        self.fr_ticker = 0
+        self.fr_sum = 0
+
     def update(self):
         delta_time = self.clock.tick() / 1000.0
+        self.fr_sum += delta_time
+        self.fr_ticker += 1
+        if self.fr_sum > 1.0:
+            print(self.fr_ticker / self.fr_sum)
+            self.fr_sum = 0
+            self.fr_ticker = 0
         self.angle += pi * delta_time * 0.01
 
         self.game_objects.update_objects(delta_time)

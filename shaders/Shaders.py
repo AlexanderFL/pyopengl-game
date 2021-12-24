@@ -1,4 +1,5 @@
 from OpenGL.GL import *
+import OpenGL.GLU
 from math import *
 
 import sys
@@ -36,6 +37,8 @@ class Shader3D:
         self.modelMatrixLoc         = glGetUniformLocation(self.renderingProgramID, "u_model_matrix")
         self.viewMatrixLoc          = glGetUniformLocation(self.renderingProgramID, "u_view_matrix")
         self.projectionMatrixLoc    = glGetUniformLocation(self.renderingProgramID, "u_projection_matrix")
+
+        self.usingTextureLoc        = glGetUniformLocation(self.renderingProgramID, "u_using_texture")
     
     #
     # Returns the reference number of the shader file after compiling
@@ -107,11 +110,15 @@ class Shader3D:
         glVertexAttribPointer(self.positionLoc, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(0))
         glVertexAttribPointer(self.normalLoc, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(3 * sizeof(GLfloat)))
 
+    def set_attrib_buffers_tex(self, vertex_buffer_id):
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id)
+        glVertexAttribPointer(self.positionLoc, 3, GL_FLOAT, False, 8 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(0))
+        glVertexAttribPointer(self.normalLoc, 3, GL_FLOAT, False, 8 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(3 * sizeof(GLfloat)))
+        glVertexAttribPointer(self.uvLoc, 2, GL_FLOAT, False, 8 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(6 * sizeof(GLfloat)))
     """
     Texture testing
     """
-    def set_diffuse_texture(self, diffuseTexture):
-        pass
+
 
     def set_specular_texture(self, specularTexture):
         pass
