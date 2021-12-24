@@ -1,6 +1,7 @@
 Improve lighting
 Add textures
 Skybox
+Add .obj files (with texturing)
 
 Player health
 Proper networking

@@ -47,7 +47,6 @@ class Floor(GameObject):
         modelMatrix.load_identity()
         modelMatrix.push_matrix()
 
-        self.cube.set_vertecies(shader)
         modelMatrix.add_translation(self.x, self.y, self.z)
         modelMatrix.add_scale(self.size, 0.1, self.size)
 
@@ -56,7 +55,7 @@ class Floor(GameObject):
 
         shader.set_material_diffuse(80/255, 123/255, 231/255)
         shader.set_model_matrix(modelMatrix.matrix)
-        self.cube.draw(shader, update_shader)
+        self.cube.draw(shader)
         modelMatrix.pop_matrix()
     
     def update(self, delta_time, game_objects):
