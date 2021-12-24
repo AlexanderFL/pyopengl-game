@@ -2,13 +2,13 @@ from CONSTANTS import *
 
 import pygame
 from pygame.locals import *
-from time import time
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from game_objects.Maze import Maze
+from objects.Skybox import Skybox
 
-from shaders.Shaders import Shader3D
+from shaders.SimpleShaders import Shader3D
 from shaders.Crosshair import ShaderCrosshair
 from maths.Matricies import *
 
@@ -18,7 +18,6 @@ from game_objects.Player import Player
 from game_objects.Cube import Cube
 from objects.Cross import Crosshair
 
-from game_objects.Bullet import Bullet
 from networking.Networking import Networking
 import asyncio
 import sys
@@ -39,10 +38,9 @@ class StartGame:
         self.shader = Shader3D()
         self.shader.use()
 
-        self.modelMatrix    = ModelMatrix()
-        self.maze = Maze(-10, 0, -10)
+        self.modelMatrix = ModelMatrix()
 
-        self.shader.set_light_position(Point(5, 10, 5))
+        self.shader.set_light_position(Point(5, 18, 5))
         self.shader.set_light_diffuse(0.9, 0.9, 0.9)
         self.shader.set_light_specular(0.89, 0.89, 0.89)
         self.shader.set_material_specular(0.89, 0.89, 0.89)
@@ -69,19 +67,25 @@ class StartGame:
 
     def initializeGameObjects(self):
         self.floor = Floor(0, -0.5, 0)
+        self.maze = Maze(-10, 0, -10)
+
         crate_texture = sys.path[0] + "\\game_objects\\textures\\Crate.png"
         self.cube1 = Cube(0, 0.5, 0, (2, 2, 2), texture_path=crate_texture)
+
         if self.is_networking:
             self.player = Player(self.shader, Point(8, 0, 0), self.server)
         else:
             self.player = Player(self.shader, Point(8, 0, 0), None)
-    
+
+        self.skybox = Skybox()
+        
         # Game objects that should be in the scene
         self.game_objects = GameObjects()
         self.game_objects.add_object(self.floor)
         self.game_objects.add_object(self.cube1)
         self.game_objects.add_object(self.maze)
-        self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
+        self.game_objects.add_object(self.skybox)
+
 
     def display(self):
         glClearColor(66/255, 135/255, 245/255, 1.0)
@@ -89,18 +93,20 @@ class StartGame:
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_DEPTH_CLAMP)
         glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-        
-        # Update player the camera
-        self.player.display()
 
+        self.shader.use()
         # Draw all objects within game_objects
         self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
+        
+        # self.skybox.shader.use()
+        # self.skybox.draw(self.player.camera.viewMatrix.get_matrix(), self.player.camera.projection_matrix.get_matrix())
         
         pygame.display.flip()
 
     def loop(self):
         exiting = False
         self.initializeGameObjects()
+        self.shader.use()
         
         while not exiting:
             for event in pygame.event.get():

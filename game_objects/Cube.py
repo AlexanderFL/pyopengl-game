@@ -41,6 +41,7 @@ class Cube(GameObject):
         img_height = image.get_height()
         # Start opengl operations
         tex_id = glGenTextures(1)
+        glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, tex_id)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)

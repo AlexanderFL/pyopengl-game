@@ -38,6 +38,7 @@ class Player:
     
 
     def update(self, delta_time, game_objects):
+        self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
         self._mouse_controller(delta_time)
         self._keyboard_controller()
 
@@ -71,10 +72,9 @@ class Player:
             if collision_object.collision_side[2] == 1 or collision_object.collision_side[3] == 1:
                 teleport_back.z = self.prev_position.z
             self.camera.set_position(teleport_back)
-
+    
     def display(self):
-        self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
-
+        pass
 
     def event_loop(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:

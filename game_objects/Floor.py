@@ -1,7 +1,7 @@
 
 from game_objects.GameObjectBase import GameObject
 from objects.Cube import CubeObject
-from shaders.Shaders import Shader3D
+from shaders.SimpleShaders import Shader3D
 
 import pygame
 from OpenGL.GL import *
