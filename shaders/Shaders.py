@@ -4,6 +4,8 @@ from math import *
 
 import sys
 
+from maths.Color import Color
+
 
 class Shader3D:
     def __init__(self):
@@ -93,11 +95,21 @@ class Shader3D:
     def set_light_diffuse(self, r, g, b):
         glUniform4f(self.lightDifLoc, r, g, b, 1.0)
     
-    def set_material_diffuse(self, r, g, b):
-        glUniform4f(self.matDifLoc, r, g, b, 1.0)
+    def set_material_diffuse(self, *args):
+        if len(args) == 1 and isinstance(args[0], Color):
+            color = args[0]
+            glUniform4f(self.matDifLoc, color.r, color.g, color.b, 1.0)
+        elif len(args) == 3:
+            r, g, b = args[0], args[1], args[2]
+            glUniform4f(self.matDifLoc, r, g, b, 1.0)
     
-    def set_material_specular(self, r, g, b):
-        glUniform4f(self.matSpecLoc, r, g, b, 1.0)
+    def set_material_specular(self, *args):
+        if len(args) == 1 and isinstance(args[0], Color):
+            color = args[0]
+            glUniform4f(self.matSpecLoc, color.r, color.g, color.b, 1.0)
+        elif len(args) == 3:
+            r, g, b = args[0], args[1], args[2]
+            glUniform4f(self.matSpecLoc, r, g, b, 1.0)
     
     def set_material_shininess(self, shiny):
         glUniform1f(self.matShinyLoc, shiny)
@@ -115,10 +127,10 @@ class Shader3D:
         glVertexAttribPointer(self.positionLoc, 3, GL_FLOAT, False, 8 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(0))
         glVertexAttribPointer(self.normalLoc, 3, GL_FLOAT, False, 8 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(3 * sizeof(GLfloat)))
         glVertexAttribPointer(self.uvLoc, 2, GL_FLOAT, False, 8 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(6 * sizeof(GLfloat)))
+    
     """
     Texture testing
     """
-
 
     def set_specular_texture(self, specularTexture):
         pass

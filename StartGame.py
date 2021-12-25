@@ -23,6 +23,8 @@ from networking.Networking import Networking
 import asyncio
 import sys
 
+from game_objects.ObjLoader import load_obj_file
+
 class StartGame:
     def __init__(self):
         self.is_networking = False
@@ -84,13 +86,18 @@ class StartGame:
             self.player = Player(self.shader, Point(8, 0, 0), self.server)
         else:
             self.player = Player(self.shader, Point(8, 0, 0), None)
+        
+        obj_file_path = sys.path[0] + "\\models"
+        obj_file_name = "Gun.obj"
+        self.cube_obj = load_obj_file(obj_file_path, obj_file_name)
+
+        print(self.cube_obj.mesh_materials)
     
         # Game objects that should be in the scene
         self.game_objects = GameObjects()
         self.game_objects.add_object(self.floor)
         self.game_objects.add_object(self.cube1)
         self.game_objects.add_object(self.maze)
-        self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
 
     def display(self):
         glClearColor(66/255, 135/255, 245/255, 1.0)
@@ -104,6 +111,14 @@ class StartGame:
 
         # Draw all objects within game_objects
         self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
+        
+        self.modelMatrix.push_matrix()
+        self.modelMatrix.load_identity()
+        self.modelMatrix.add_translation(5, 0.0, 0)
+        self.modelMatrix.add_scale(0.5, 0.5, 0.5)
+        self.shader.set_model_matrix(self.modelMatrix.matrix)
+        self.cube_obj.draw(self.shader)
+        self.modelMatrix.pop_matrix()
         
         pygame.display.flip()
 
