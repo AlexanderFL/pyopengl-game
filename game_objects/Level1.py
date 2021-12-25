@@ -8,9 +8,9 @@ if __name__ == "__main__":
 else:
     from game_objects.Cube import Cube
 
-class Maze(GameObject):
+class Level1(GameObject):
     """
-        The maze gameobject
+        The Level1 gameobject
     """
     def __init__(self, x, y, z) -> None:
         super().__init__(x, y, z)

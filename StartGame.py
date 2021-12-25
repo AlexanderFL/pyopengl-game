@@ -6,7 +6,7 @@ from time import time
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from game_objects.Maze import Maze
+from game_objects.Level1 import Level1
 
 from shaders.Shaders import Shader3D
 from shaders.Crosshair import ShaderCrosshair
@@ -40,7 +40,7 @@ class StartGame:
         self.shader.use()
 
         self.modelMatrix    = ModelMatrix()
-        self.maze = Maze(-10, 0, -10)
+        self.maze = Level1(-10, 0, -10)
 
         self.shader.set_light_position(Point(5, 10, 5))
         self.shader.set_light_diffuse(0.9, 0.9, 0.9)
