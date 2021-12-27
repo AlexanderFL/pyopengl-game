@@ -60,6 +60,10 @@ class Player(GameObject):
             if self.network != None:
                 self.network.send_on_next_update(bullet_obj)
         
+        self.shader.use()
+        self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
+        self.shader.set_eye_position(self.camera.viewMatrix.eye)
+        
     def move(self, delta_time):
         self.change_vec += self.velocity * delta_time * self.speed
         self.camera.move_position(self.change_vec)
@@ -72,10 +76,6 @@ class Player(GameObject):
             if collision_object.collision_side[2] == 1 or collision_object.collision_side[3] == 1:
                 teleport_back.z = self.prev_position.z
             self.camera.set_position(teleport_back)
-
-    def display(self):
-        self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
-
 
     def event_loop(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:

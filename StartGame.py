@@ -19,7 +19,6 @@ from objects.Player import Player
 from objects.Cube import Cube
 from objects.primatives.Crosshair import Crosshair
 
-from objects.Bullet import Bullet
 from networking.Networking import Networking
 import asyncio
 import sys
@@ -62,25 +61,6 @@ class StartGame:
         self.fr_ticker = 0
         self.fr_sum = 0
 
-    def update(self):
-        delta_time = self.clock.tick() / 1000.0
-        self.fr_sum += delta_time
-        self.fr_ticker += 1
-        if self.fr_sum > 1.0:
-            print(self.fr_ticker / self.fr_sum)
-            self.fr_sum = 0
-            self.fr_ticker = 0
-
-        self.game_objects.update_objects(delta_time)
-        self.player.update(delta_time, self.game_objects)
-        
-        if self.is_networking:
-            self.server.send_on_next_update(self.player)
-
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            result = loop.run_until_complete(self.server.update())
-
     def initializeGameObjects(self):
         self.maze = Level1(-10, 0, -10)
         self.floor = Floor(0, -0.5, 0)
@@ -98,28 +78,44 @@ class StartGame:
         self.cube_obj = load_obj_file(obj_file_path, obj_file_name)
         
         # Game objects that should be in the scene
+        # Note: The player is handled seperately from other objects
         self.game_objects = GameObjects()
         self.game_objects.add_object(self.floor)
         self.game_objects.add_object(self.cube1)
         self.game_objects.add_object(self.maze)
 
+    def update(self):
+        delta_time = self.clock.tick() / 1000.0
+        self.fr_sum += delta_time
+        self.fr_ticker += 1
+        if self.fr_sum > 1.0:
+            print(self.fr_ticker / self.fr_sum)
+            self.fr_sum = 0
+            self.fr_ticker = 0
+
+        # Update all objects in the scene, including the player
+        self.game_objects.update_objects(delta_time)
+        self.player.update(delta_time, self.game_objects)
+        
+        # Networking stuff
+        if self.is_networking:
+            self.server.send_on_next_update(self.player)
+
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            result = loop.run_until_complete(self.server.update())
+
     def display(self):
+        # Make sure that the projection is in perspective
         self.player.camera.projection_matrix.set_perspective(3.14159/2, SCREEN_WIDTH/SCREEN_HEIGHT, 0.001, 100)
         glClearColor(66/255, 135/255, 245/255, 1.0)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-        glDisable(GL_BLEND)
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_DEPTH_CLAMP)
         glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
         
-        # Update player the camera
-        self.shader.use()
-        self.player.display()
-
         # Draw all objects within game_objects
         self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
-
-        self.shader.set_eye_position(self.player.camera.viewMatrix.eye)
         
         self.modelMatrix.push_matrix()
         self.modelMatrix.load_identity()
@@ -130,6 +126,7 @@ class StartGame:
         self.modelMatrix.pop_matrix()
 
         # Draw the crosshair (small dot) that stays in the center of the screen
+        # Requires that the camera is set to orthographic
         self.player.camera.projection_matrix.set_orthographic(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT, 0.01, 10)
         self.crosshair.draw()
         
