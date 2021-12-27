@@ -6,8 +6,9 @@ from common_game_maths.Vector import Vector
 from .Camera import Camera
 from CONSTANTS import *
 from .Bullet import Bullet
+from .GameObjectBase import GameObject
 
-class Player:
+class Player(GameObject):
     def __init__(self, shader, position=Point(0,0,0), network = None) -> None:
         self.shader = shader
         self.prev_position = position

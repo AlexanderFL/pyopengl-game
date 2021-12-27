@@ -42,11 +42,10 @@ class StartGame:
         self.shader = Shader3D()
         self.shader.use()
 
-        self.crosshair = Crosshair()
-        self.crosshairshader = ShaderCrosshair()
+        crosshairshader = ShaderCrosshair()
+        self.crosshair = Crosshair(crosshairshader)
 
         self.modelMatrix    = ModelMatrix()
-        self.maze = Level1(-10, 0, -10)
 
         self.shader.set_light_position(Point(5, 0, 4))
         self.shader.set_light_diffuse(0.9, 0.89, 0.74)
@@ -83,9 +82,12 @@ class StartGame:
             result = loop.run_until_complete(self.server.update())
 
     def initializeGameObjects(self):
+        self.maze = Level1(-10, 0, -10)
         self.floor = Floor(0, -0.5, 0)
+
         crate_texture = sys.path[0] + "\\textures\\Crate.png"
         self.cube1 = Cube(0, 0.5, 0, (2, 2, 2), texture_path=crate_texture)
+
         if self.is_networking:
             self.player = Player(self.shader, Point(8, 0, 0), self.server)
         else:
@@ -94,8 +96,7 @@ class StartGame:
         obj_file_path = sys.path[0] + "\\models"
         obj_file_name = "crate.obj"
         self.cube_obj = load_obj_file(obj_file_path, obj_file_name)
-        print(self.cube_obj.mesh_materials)
-    
+        
         # Game objects that should be in the scene
         self.game_objects = GameObjects()
         self.game_objects.add_object(self.floor)
@@ -128,10 +129,8 @@ class StartGame:
         self.cube_obj.draw(self.shader)
         self.modelMatrix.pop_matrix()
 
-        self.crosshairshader.use()
+        # Draw the crosshair (small dot) that stays in the center of the screen
         self.player.camera.projection_matrix.set_orthographic(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT, 0.01, 10)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         self.crosshair.draw()
         
         pygame.display.flip()
