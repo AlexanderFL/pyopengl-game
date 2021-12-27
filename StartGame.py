@@ -1,3 +1,4 @@
+from OpenGL import GL
 from CONSTANTS import *
 
 import pygame
@@ -40,6 +41,9 @@ class StartGame:
         
         self.shader = Shader3D()
         self.shader.use()
+
+        self.crosshair = Crosshair()
+        self.crosshairshader = ShaderCrosshair()
 
         self.modelMatrix    = ModelMatrix()
         self.maze = Level1(-10, 0, -10)
@@ -88,7 +92,7 @@ class StartGame:
             self.player = Player(self.shader, Point(8, 0, 0), None)
         
         obj_file_path = sys.path[0] + "\\models"
-        obj_file_name = "metallic_sphere.obj"
+        obj_file_name = "simple_box.obj"
         self.cube_obj = load_obj_file(obj_file_path, obj_file_name)
         print(self.cube_obj.mesh_materials)
     
@@ -99,13 +103,16 @@ class StartGame:
         self.game_objects.add_object(self.maze)
 
     def display(self):
+        self.player.camera.projection_matrix.set_perspective(3.14159/2, SCREEN_WIDTH/SCREEN_HEIGHT, 0.001, 100)
         glClearColor(66/255, 135/255, 245/255, 1.0)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+        glDisable(GL_BLEND)
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_DEPTH_CLAMP)
         glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
         
         # Update player the camera
+        self.shader.use()
         self.player.display()
 
         # Draw all objects within game_objects
@@ -120,6 +127,12 @@ class StartGame:
         self.shader.set_model_matrix(self.modelMatrix.matrix)
         self.cube_obj.draw(self.shader)
         self.modelMatrix.pop_matrix()
+
+        self.crosshairshader.use()
+        self.player.camera.projection_matrix.set_orthographic(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT, 0.01, 10)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        self.crosshair.draw()
         
         pygame.display.flip()
 
