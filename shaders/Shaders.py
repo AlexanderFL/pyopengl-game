@@ -40,7 +40,7 @@ class Shader3D:
         self.viewMatrixLoc          = glGetUniformLocation(self.renderingProgramID, "u_view_matrix")
         self.projectionMatrixLoc    = glGetUniformLocation(self.renderingProgramID, "u_projection_matrix")
 
-        self.usingTextureLoc        = glGetUniformLocation(self.renderingProgramID, "u_using_texture")
+        self.usingTextureLoc        = glGetUniformLocation(self.renderingProgramID, "u_is_texture")
     
     #
     # Returns the reference number of the shader file after compiling
@@ -118,11 +118,13 @@ class Shader3D:
         glUniform1f(self.diffuseTexLoc, tex)
     
     def set_attribute_buffers(self, vertex_buffer_id):
+        glUniform1f(self.usingTextureLoc, 0.0)
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id)
         glVertexAttribPointer(self.positionLoc, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(0))
         glVertexAttribPointer(self.normalLoc, 3, GL_FLOAT, False, 6 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(3 * sizeof(GLfloat)))
 
     def set_attrib_buffers_tex(self, vertex_buffer_id):
+        glUniform1f(self.usingTextureLoc, 1.0)
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id)
         glVertexAttribPointer(self.positionLoc, 3, GL_FLOAT, False, 8 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(0))
         glVertexAttribPointer(self.normalLoc, 3, GL_FLOAT, False, 8 * sizeof(GLfloat), OpenGL.GLU.ctypes.c_void_p(3 * sizeof(GLfloat)))

@@ -26,21 +26,16 @@ void main(void)
     v_uv = a_uv;
 
     position        = u_model_matrix * position;
-    v_normal          = u_model_matrix * normal;
+    v_normal        = u_model_matrix * normal;
 
     v_s             = u_light_position - position;
-    // float lambert   = max(0.0, dot(normal, s) / (length(normal) * length(s)));
-    // v_color      = u_light_diffuse * u_material_diffuse * lambert;
 
     vec4 v          = u_eye_position - position;
-    v_h             = v_s + v;
-    // float phong     = max(0.0, dot(normal, h) / (length(normal) * length(h)));
-
-    // v_color         = u_light_diffuse * u_material_diffuse * lambert
-    //                + u_light_specular * u_material_specular * pow(phong, u_material_shininess);
+    v_h             = v + v_s;
 
     position        = u_view_matrix * position;
     position        = u_projection_matrix * position;
 
     gl_Position     = position;
+
 }

@@ -121,5 +121,7 @@ class Cube(GameObject):
             self.cube.draw(shader)
             modelMatrix.pop_matrix()
 
+            glBindTexture(GL_TEXTURE_2D, 0)
+
     def update(self, delta_time, game_objects):
         pass

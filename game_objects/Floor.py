@@ -55,6 +55,7 @@ class Floor(GameObject):
 
         shader.set_material_diffuse(80/255, 123/255, 231/255)
         shader.set_model_matrix(modelMatrix.matrix)
+        shader.set_material_shininess(1)
         self.cube.draw(shader)
         modelMatrix.pop_matrix()
     
