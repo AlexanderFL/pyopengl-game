@@ -9,3 +9,5 @@ Map design
 
 (UI?)
 (Crosshair)
+
+SET THE EYE POSITION IN THE SHADER PER UPDATE

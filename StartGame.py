@@ -23,6 +23,8 @@ from networking.Networking import Networking
 import asyncio
 import sys
 
+from game_objects.ObjLoader import load_obj_file
+
 class StartGame:
     def __init__(self):
         self.is_networking = False
@@ -42,16 +44,17 @@ class StartGame:
         self.modelMatrix    = ModelMatrix()
         self.maze = Level1(-10, 0, -10)
 
-        self.shader.set_light_position(Point(5, 10, 5))
-        self.shader.set_light_diffuse(0.9, 0.9, 0.9)
+        self.shader.set_light_position(Point(5, 0, 4))
+        self.shader.set_light_diffuse(0.9, 0.89, 0.74)
         self.shader.set_light_specular(0.89, 0.89, 0.89)
-        self.shader.set_material_specular(0.89, 0.89, 0.89)
-        self.shader.set_material_shininess(25)
 
         self.clock = pygame.time.Clock()
         self.clock.tick()
 
         self.angle = 0
+        self.radius = 3
+        self.light_x = self.radius
+        self.light_z = self.radius
 
         self.fr_ticker = 0
         self.fr_sum = 0
@@ -64,7 +67,6 @@ class StartGame:
             print(self.fr_ticker / self.fr_sum)
             self.fr_sum = 0
             self.fr_ticker = 0
-        self.angle += pi * delta_time * 0.01
 
         self.game_objects.update_objects(delta_time)
         self.player.update(delta_time, self.game_objects)
@@ -84,13 +86,17 @@ class StartGame:
             self.player = Player(self.shader, Point(8, 0, 0), self.server)
         else:
             self.player = Player(self.shader, Point(8, 0, 0), None)
+        
+        obj_file_path = sys.path[0] + "\\models"
+        obj_file_name = "metallic_sphere.obj"
+        self.cube_obj = load_obj_file(obj_file_path, obj_file_name)
+        print(self.cube_obj.mesh_materials)
     
         # Game objects that should be in the scene
         self.game_objects = GameObjects()
         self.game_objects.add_object(self.floor)
         self.game_objects.add_object(self.cube1)
         self.game_objects.add_object(self.maze)
-        self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
 
     def display(self):
         glClearColor(66/255, 135/255, 245/255, 1.0)
@@ -104,6 +110,16 @@ class StartGame:
 
         # Draw all objects within game_objects
         self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
+
+        self.shader.set_eye_position(self.player.camera.viewMatrix.eye)
+        
+        self.modelMatrix.push_matrix()
+        self.modelMatrix.load_identity()
+        self.modelMatrix.add_translation(5, 0.15, 0)
+        self.modelMatrix.add_scale(0.5, 0.5, 0.5)
+        self.shader.set_model_matrix(self.modelMatrix.matrix)
+        self.cube_obj.draw(self.shader)
+        self.modelMatrix.pop_matrix()
         
         pygame.display.flip()
 
