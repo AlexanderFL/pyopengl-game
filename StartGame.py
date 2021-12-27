@@ -92,7 +92,7 @@ class StartGame:
             self.player = Player(self.shader, Point(8, 0, 0), None)
         
         obj_file_path = sys.path[0] + "\\models"
-        obj_file_name = "simple_box.obj"
+        obj_file_name = "crate.obj"
         self.cube_obj = load_obj_file(obj_file_path, obj_file_name)
         print(self.cube_obj.mesh_materials)
     
