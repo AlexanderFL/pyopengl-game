@@ -15,7 +15,6 @@ class Level1(GameObject):
     def __init__(self, x, y, z) -> None:
         super().__init__(x, y, z)
         self.size = 20
-        # 1 marks walls, 0 marks no wall, o marks start, x marks finish
         
         wall_color = (78/255, 233/255, 81/255)
         longwall = sys.path[0] + "\\textures\\longwall.png"

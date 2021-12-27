@@ -53,9 +53,10 @@ class Floor(GameObject):
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, self.texture_id)
 
+        shader.set_material_specular(80/255, 123/255, 231/255)
         shader.set_material_diffuse(80/255, 123/255, 231/255)
-        shader.set_model_matrix(modelMatrix.matrix)
         shader.set_material_shininess(1)
+        shader.set_model_matrix(modelMatrix.matrix)
         self.cube.draw(shader)
         modelMatrix.pop_matrix()
     
