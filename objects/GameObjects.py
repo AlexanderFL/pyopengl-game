@@ -1,4 +1,4 @@
-from game_objects.GameObjectBase import GameObject
+from objects.GameObjectBase import GameObject
 from typing import List
 
 class GameObjects:

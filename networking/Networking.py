@@ -1,8 +1,8 @@
 from json.decoder import JSONDecodeError
 import socket
 import json
-from game_objects.Player import Player
-from game_objects.Bullet import Bullet
+from objects.Player import Player
+from objects.Bullet import Bullet
 from time import time
 
 class Networking:

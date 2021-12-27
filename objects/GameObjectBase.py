@@ -6,9 +6,15 @@ class GameObject:
         it contains common functions and variables that each game object MUST have
     """
     def __init__(self, x, y, z) -> None:
+        self.set_position(x, y, z)
+    
+    def set_position(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
+    
+    def update(self, delta_time) -> None:
+        raise NotImplementedError("update is not implemented")
     
     def collision(self, player_pos) -> GameObject:
         # Implement the collision

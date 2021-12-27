@@ -7,24 +7,24 @@ from time import time
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from game_objects.Level1 import Level1
+from objects.Level1 import Level1
 
 from shaders.Shaders import Shader3D
 from shaders.Crosshair import ShaderCrosshair
 from maths.Matricies import *
 
-from game_objects.GameObjects import GameObjects
-from game_objects.Floor import Floor
-from game_objects.Player import Player
-from game_objects.Cube import Cube
-from objects.Cross import Crosshair
+from objects.GameObjects import GameObjects
+from objects.Floor import Floor
+from objects.Player import Player
+from objects.Cube import Cube
+from objects.primatives.Crosshair import Crosshair
 
-from game_objects.Bullet import Bullet
+from objects.Bullet import Bullet
 from networking.Networking import Networking
 import asyncio
 import sys
 
-from game_objects.ObjLoader import load_obj_file
+from objects.primatives.ObjLoader import load_obj_file
 
 class StartGame:
     def __init__(self):

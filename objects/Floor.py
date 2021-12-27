@@ -1,5 +1,5 @@
 
-from game_objects.GameObjectBase import GameObject
+from objects.GameObjectBase import GameObject
 from objects.Cube import CubeObject
 from shaders.Shaders import Shader3D
 

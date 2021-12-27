@@ -1,19 +1,17 @@
 
 from math import pi, cos, sin
 from OpenGL.GL import *
-from OpenGL.GLU import *
-
-import numpy
 
 class Crosshair:
     def __init__(self):
-        self.rad = 0.0025
-        self.samples = 21
 
+        self.samples = 21
         self.position_array = [0, 0]
+
+        rad = 0.0025
         for i in range(0, self.samples):
-            x = self.rad * cos(i * 2*pi / (self.samples - 1))
-            y = self.rad * 1.8 * sin(i * 2*pi / (self.samples - 1))
+            x = rad * cos(i * 2*pi / (self.samples - 1))
+            y = rad * 1.8 * sin(i * 2*pi / (self.samples - 1))
             self.position_array.append(x)
             self.position_array.append(y)
 

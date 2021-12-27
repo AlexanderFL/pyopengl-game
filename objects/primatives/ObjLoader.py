@@ -1,5 +1,5 @@
 from OpenGL.GL import *
-from objects.MeshModel import MeshModel
+from objects.primatives.MeshModel import MeshModel
 from maths.Color import Color
 from maths.Material import Material
 from common_game_maths.Point import Point

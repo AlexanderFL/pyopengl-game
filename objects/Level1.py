@@ -1,12 +1,12 @@
 
 from math import pi
-from game_objects.GameObjectBase import GameObject
+from objects.GameObjectBase import GameObject
 import sys
 
 if __name__ == "__main__":
     from Cube import Cube
 else:
-    from game_objects.Cube import Cube
+    from objects.Cube import Cube
 
 class Level1(GameObject):
     """
