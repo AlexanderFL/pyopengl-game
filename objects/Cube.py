@@ -1,7 +1,7 @@
 from OpenGL.GL import *
 from maths.Matricies import ModelMatrix
 from maths.Vector import Vector
-from objects.primatives.Cube import CubeObject
+from objects.primatives.CubePrimative import CubePrimative
 from objects.GameObjectBase import GameObject
 from common_game_maths.Point import Point
 from math import sqrt, pow
@@ -19,7 +19,7 @@ class Cube(GameObject):
         self.size_y = size[1]
         self.size_z = size[2]
         self.color = color
-        self.cube = CubeObject()
+        self.cube = CubePrimative()
         # x left, x right, z left, z right
         self.moving = [False, False, False, False]
         self.rotation = Vector(0, 0, 0)

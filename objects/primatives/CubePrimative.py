@@ -4,7 +4,7 @@ from OpenGL.GLU import *
 from shaders.Shaders import Shader3D
 import numpy
 
-class CubeObject:
+class CubePrimative:
     def __init__(self):
         cube_array = [
             #position           normals             uv

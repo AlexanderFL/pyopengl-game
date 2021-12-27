@@ -4,7 +4,7 @@ from OpenGL.GL import *
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 import numpy
 
-class Sphere:
+class SpherePrimative:
     def __init__(self, stacks = 12, slices = 12):
         self.slices = slices
         self.vertex_count = 0

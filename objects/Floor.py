@@ -1,6 +1,6 @@
 
 from objects.GameObjectBase import GameObject
-from objects.Cube import CubeObject
+from objects.Cube import CubePrimative
 from shaders.Shaders import Shader3D
 
 import pygame
@@ -14,7 +14,7 @@ class Floor(GameObject):
     def __init__(self, x, y, z, size=20):
         super().__init__(x, y, z)
         self.size = size
-        self.cube = CubeObject()
+        self.cube = CubePrimative()
         self.destroy = False
 
         floor_texture = sys.path[0] + "\\textures\\metal_big_floor-min.png"

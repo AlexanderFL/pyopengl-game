@@ -2,7 +2,7 @@ import json
 from common_game_maths.Point import Point
 from common_game_maths.Vector import Vector
 from numpy.lib.function_base import delete
-from objects.primatives.Sphere import Sphere
+from objects.primatives.SpherePrimative import SpherePrimative
 
 class Bullet:
     def __init__(self, shader, position=Point(1, 1, 1), direction=Vector(1, 0, 0)):
@@ -16,7 +16,7 @@ class Bullet:
         self.size_z = 0.1
 
         self.color = (1, 0.0, 0.0)
-        self.sphere = Sphere()
+        self.sphere = SpherePrimative()
 
         self.destroy = False
     

@@ -24,7 +24,7 @@ from networking.Networking import Networking
 import asyncio
 import sys
 
-from objects.primatives.ObjLoader import load_obj_file
+from objects.meshes.ObjLoader import load_obj_file
 
 class StartGame:
     def __init__(self):
