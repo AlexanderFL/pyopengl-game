@@ -18,8 +18,8 @@ class Level1(GameObject):
         # 1 marks walls, 0 marks no wall, o marks start, x marks finish
         
         wall_color = (78/255, 233/255, 81/255)
-        longwall = sys.path[0] + "\\game_objects\\textures\\longwall.png"
-        longwallr = sys.path[0] + "\\game_objects\\textures\\longwall2.png"
+        longwall = sys.path[0] + "\\textures\\longwall.png"
+        longwallr = sys.path[0] + "\\textures\\longwall2.png"
         self.wall1 = Cube(0, 0.1, 10, (20, 1.5, 0.1), wall_color, texture_path=longwall)
         self.wall2 = Cube(0, 0.1, -10, (20, 1.5, 0.1), wall_color, texture_path=longwall)
         self.wall3 = Cube(10, 0.1, 0, (0.1, 1.5, 20), wall_color, texture_path=longwallr)

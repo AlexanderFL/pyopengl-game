@@ -84,7 +84,7 @@ class StartGame:
 
     def initializeGameObjects(self):
         self.floor = Floor(0, -0.5, 0)
-        crate_texture = sys.path[0] + "\\game_objects\\textures\\Crate.png"
+        crate_texture = sys.path[0] + "\\textures\\Crate.png"
         self.cube1 = Cube(0, 0.5, 0, (2, 2, 2), texture_path=crate_texture)
         if self.is_networking:
             self.player = Player(self.shader, Point(8, 0, 0), self.server)

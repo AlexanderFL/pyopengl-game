@@ -29,7 +29,7 @@ class Cube(GameObject):
 
         self.destroy = False
 
-        self.apply_texture = sys.path[0] + "\\game_objects\\textures\\missing.png"
+        self.apply_texture = sys.path[0] + "\\textures\\missing.png"
         if texture_path != None:
             self.apply_texture = texture_path
         self.texture_id = self.load_texture(self.apply_texture)

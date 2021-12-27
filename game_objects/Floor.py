@@ -17,7 +17,7 @@ class Floor(GameObject):
         self.cube = CubeObject()
         self.destroy = False
 
-        floor_texture = sys.path[0] + "\\game_objects\\textures\\metal_big_floor-min.png"
+        floor_texture = sys.path[0] + "\\textures\\metal_big_floor-min.png"
         self.texture_id = self.load_texture(floor_texture)
     
     def load_texture(self, path):
