@@ -28,7 +28,7 @@ class Level1(GameObject):
         self.wall3 = TexturedCube(10, 0.2, 0, (0.1, 1.5, 20), wall_color, texture_path=longwallr)
         self.wall4 = TexturedCube(-10, 0.2, 0, (0.1, 1.5, 20), wall_color, texture_path=longwallr)
         
-        obst_shiny = 1
+        obst_shiny = 25
         q1_diffuse = Color(244/255, 67/255, 54/255)
         q1_specular = Color(1.0, 67/255, 54/255)
         q1_mat = Material(q1_diffuse, q1_specular, obst_shiny)

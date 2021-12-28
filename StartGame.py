@@ -71,7 +71,7 @@ class StartGame:
         if self.is_networking:
             self.player = Player(self.shader, Point(9, 0, 9), self.server)
         else:
-            self.player = Player(self.shader, Point(9, 5, 9), None)
+            self.player = Player(self.shader, Point(9, 0, 9), None)
         
         obj_file_path = sys.path[0] + "\\models"
         obj_file_name = "crate.obj"

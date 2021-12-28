@@ -13,7 +13,7 @@ class Crosshair:
         self.position_array = [0, 0]
         self.shader = shader
 
-        rad = 0.0025
+        rad = 0.005
         for i in range(0, self.samples):
             x = rad * cos(i * 2*pi / (self.samples - 1))
             y = rad * 1.8 * sin(i * 2*pi / (self.samples - 1))
