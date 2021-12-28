@@ -1,5 +1,6 @@
 
 from math import pi
+from maths.Vector import Vector
 
 from objects.GameObjectBase import GameObject
 import sys
@@ -11,6 +12,7 @@ else:
     from .SimpleCube import SimpleCube
     from maths.Material import Material
     from maths.Color import Color
+    from .Crate import Crate
 
 class Level1(GameObject):
     """
@@ -67,6 +69,12 @@ class Level1(GameObject):
         self.q4_cube_obsticle_3 = SimpleCube(0.5, 0.2, 4.5, q4_mat, (1, 1.5, 5))
         self.q4_cube_obsticle_4 = SimpleCube(6.5, 0.2, 8.5, q4_mat, (1, 1.5, 3))
 
+        # Fill space up with crates for fun
+        self.crate_1 = Crate(-9.75, -0.45, 3, 0.15)
+        self.crate_2 = Crate(-9.75, -0.45, 2.5, 0.15)
+        self.crate_3 = Crate(-9.43, -0.45, 2.75, 0.15)
+        self.crate_4 = Crate(-9.75, -0.15, 2.75, 0.15, Vector(0, 90, 0))
+
         # Fill the list with instances of Cube() that can then be drawn
         self.cubes = []
 
@@ -93,6 +101,11 @@ class Level1(GameObject):
         self.cubes.append(self.q4_cube_obsticle_3)
         self.cubes.append(self.q4_cube_obsticle_4)
 
+        self.cubes.append(self.crate_1)
+        self.cubes.append(self.crate_2)
+        self.cubes.append(self.crate_3)
+        self.cubes.append(self.crate_4)
+
         self.destroy = False
         
     
@@ -111,7 +124,7 @@ class Level1(GameObject):
         # Implement the draw call
         for x in range(0, len(self.cubes)):
             c = self.cubes[x]
-            c.draw(modelMatrix, shader, update_shader)
+            c.draw(modelMatrix, shader)
 
     def update(self, delta_time, game_objects):
         pass

@@ -96,7 +96,7 @@ class TexturedCube(GameObject):
             return self
         return None
     
-    def draw(self, modelMatrix : ModelMatrix, shader, update_shader=False) -> None:
+    def draw(self, modelMatrix : ModelMatrix, shader) -> None:
         # Implement the draw call
         if self.visible:
             modelMatrix.load_identity()

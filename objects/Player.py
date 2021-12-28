@@ -48,8 +48,8 @@ class Player(GameObject):
         collision_objects = game_objects.check_collision(self.position)
 
         if collision_objects != []:
+            self.collide(collision_objects)
             pass
-            #self.collide(collision_objects)
         
         if self.firing:
             self.firing = False

@@ -117,13 +117,13 @@ class StartGame:
         # Draw all objects within game_objects
         self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
         
-        self.modelMatrix.push_matrix()
-        self.modelMatrix.load_identity()
-        self.modelMatrix.add_translation(5, 0.15, 0)
-        self.modelMatrix.add_scale(0.5, 0.5, 0.5)
-        self.shader.set_model_matrix(self.modelMatrix.matrix)
-        self.cube_obj.draw(self.shader)
-        self.modelMatrix.pop_matrix()
+        #self.modelMatrix.push_matrix()
+        #self.modelMatrix.load_identity()
+        #self.modelMatrix.add_translation(5, 0.15, 0)
+        #self.modelMatrix.add_scale(0.5, 0.5, 0.5)
+        #self.shader.set_model_matrix(self.modelMatrix.matrix)
+        #self.cube_obj.draw(self.shader)
+        #self.modelMatrix.pop_matrix()
 
         # Draw the crosshair (small dot) that stays in the center of the screen
         # Requires that the camera is set to orthographic

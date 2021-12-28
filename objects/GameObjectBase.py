@@ -20,6 +20,6 @@ class GameObject:
         # Implement the collision
         raise NotImplementedError("collision is not implemented")
     
-    def draw(self, player_pos) -> GameObject:
+    def draw(self) -> GameObject:
         # Implement the draw call
         raise NotImplementedError("draw is not implemented")
