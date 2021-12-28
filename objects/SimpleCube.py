@@ -8,18 +8,18 @@ from math import sqrt, pow
 import pygame
 import sys
 
-class Cube(GameObject):
+class SimpleCube(GameObject):
     """
         A single cube gameobject that has collision
     """
-    def __init__(self, x, y, z, size=(1, 1, 1), color=(0.9, 0.9, 0.9), visible=True, texture_path=None):
+    def __init__(self, x, y, z, material, size=(1, 1, 1), visible=True):
         super().__init__(x, y, z)
         self.position = Point(x, y, z)
         self.size_x = size[0]
         self.size_y = size[1]
         self.size_z = size[2]
-        self.color = color
-        self.cube = CubePrimative()
+        self.material = material
+        self.cube = CubePrimative(has_uv=False)
         # x left, x right, z left, z right
         self.moving = [False, False, False, False]
         self.rotation = Vector(0, 0, 0)
@@ -28,30 +28,7 @@ class Cube(GameObject):
         self.collision_side = [0, 0, 0, 0] # Left x, right x, left z, right z
 
         self.destroy = False
-
-        self.apply_texture = sys.path[0] + "\\textures\\missing.png"
-        if texture_path != None:
-            self.apply_texture = texture_path
-        self.texture_id = self.load_texture(self.apply_texture)
     
-    def load_texture(self, path):
-        image = pygame.image.load(path)
-        tex_string = pygame.image.tostring(image, "RGBA", 1)
-        img_width = image.get_width()
-        img_height = image.get_height()
-        # Start opengl operations
-        tex_id = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, tex_id)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_width, img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex_string)
-        # Generate a mipmap for the texture
-        glGenerateMipmap(GL_TEXTURE_2D)
-        return tex_id
-
     def move(self, change):
         # Change cube position by change
         if self.moving[0]:
@@ -108,15 +85,11 @@ class Cube(GameObject):
             modelMatrix.add_rotate_z(self.rotation.z)
             modelMatrix.add_scale(self.size_x, self.size_y, self.size_z)
 
-            glActiveTexture(GL_TEXTURE0)
-            glBindTexture(GL_TEXTURE_2D, self.texture_id)
-            
             # shader.set_diffuse_texture(0)
             shader.set_model_matrix(modelMatrix.matrix)
-            # shader.set_material_diffuse(self.color[0], self.color[1], self.color[2])
-            shader.set_material_diffuse(1, 1, 1) # TEMPORARY
-            shader.set_material_specular(0.6282, 0.5558, 0.3660)
-            shader.set_material_shininess(100)
+            shader.set_material_diffuse(self.material.diffuse)
+            shader.set_material_specular(self.material.specular)
+            shader.set_material_shininess(self.material.shininess)
             
             self.cube.draw(shader)
             modelMatrix.pop_matrix()

@@ -16,7 +16,7 @@ from maths.Matricies import *
 from objects.GameObjects import GameObjects
 from objects.Floor import Floor
 from objects.Player import Player
-from objects.Cube import Cube
+from objects.TexturedCube import TexturedCube
 from objects.primatives.Crosshair import Crosshair
 
 from networking.Networking import Networking
@@ -46,9 +46,9 @@ class StartGame:
 
         self.modelMatrix    = ModelMatrix()
 
-        self.shader.set_light_position(Point(5, 0, 4))
-        self.shader.set_light_diffuse(0.9, 0.89, 0.74)
-        self.shader.set_light_specular(0.89, 0.89, 0.89)
+        self.shader.set_light_position(Point(9, 0, 9))
+        self.shader.set_light_diffuse(1.0, 193/255, 7/255)
+        self.shader.set_light_specular(1.0, 193/255, 7/255)
 
         self.clock = pygame.time.Clock()
         self.clock.tick()
@@ -66,12 +66,12 @@ class StartGame:
         self.floor = Floor(0, -0.5, 0)
 
         crate_texture = sys.path[0] + "\\textures\\Crate.png"
-        self.cube1 = Cube(0, 0.5, 0, (2, 2, 2), texture_path=crate_texture)
+        self.cube1 = TexturedCube(0, 0.5, 0, (2, 2, 2), texture_path=crate_texture)
 
         if self.is_networking:
-            self.player = Player(self.shader, Point(8, 0, 0), self.server)
+            self.player = Player(self.shader, Point(9, 0, 9), self.server)
         else:
-            self.player = Player(self.shader, Point(8, 0, 0), None)
+            self.player = Player(self.shader, Point(9, 5, 9), None)
         
         obj_file_path = sys.path[0] + "\\models"
         obj_file_name = "crate.obj"
@@ -81,7 +81,7 @@ class StartGame:
         # Note: The player is handled seperately from other objects
         self.game_objects = GameObjects()
         self.game_objects.add_object(self.floor)
-        self.game_objects.add_object(self.cube1)
+        #self.game_objects.add_object(self.cube1)
         self.game_objects.add_object(self.maze)
 
     def update(self):

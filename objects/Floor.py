@@ -1,6 +1,6 @@
 
 from objects.GameObjectBase import GameObject
-from objects.Cube import CubePrimative
+from objects.TexturedCube import CubePrimative
 from shaders.Shaders import Shader3D
 
 import pygame
