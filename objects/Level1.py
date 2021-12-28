@@ -5,7 +5,7 @@ from objects.GameObjectBase import GameObject
 import sys
 
 if __name__ == "__main__":
-    from Cube import TexturedCube
+    from .TexturedCube import TexturedCube
 else:
     from objects.TexturedCube import TexturedCube
     from .SimpleCube import SimpleCube
