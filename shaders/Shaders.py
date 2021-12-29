@@ -89,11 +89,11 @@ class Shader3D:
     def set_light_position(self, pos):
         glUniform4f(self.lightPosLoc, pos.x, pos.y, pos.z, 1.0)
     
-    def set_light_specular(self, r, g, b):
-        glUniform4f(self.lightSpecLoc, r, g, b, 1.0)
+    def set_light_specular(self, color):
+        glUniform4f(self.lightSpecLoc, color.r, color.g, color.b, color.a)
     
-    def set_light_diffuse(self, r, g, b):
-        glUniform4f(self.lightDifLoc, r, g, b, 1.0)
+    def set_light_diffuse(self, color):
+        glUniform4f(self.lightDifLoc, color.r, color.g, color.b, color.a)
     
     def set_material_diffuse(self, *args):
         if len(args) == 1 and isinstance(args[0], Color):
