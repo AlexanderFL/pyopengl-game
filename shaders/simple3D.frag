@@ -24,11 +24,12 @@ void main(void)
         mat_diffuse *= texture2D(u_tex01, v_uv);
     }
 
+    vec4 ambient    = vec4(0.05, 0.05, 0.05, 1.0) * mat_diffuse;
+
     // At this point v_normal and v_s are not normalized so we need to make sure that they are
     float lambert   = max(0.0, dot(v_normal, v_s) / (length(v_normal) * length(v_s)));
     float phong     = max(0.0, dot(v_normal, v_h) / (length(v_normal) * length(v_h)));
     
-    gl_FragColor    = u_light_diffuse * mat_diffuse * lambert
+    gl_FragColor    = ambient + u_light_diffuse * mat_diffuse * lambert
                     + u_light_specular * u_material_specular * pow(phong, u_material_shininess);
-
 }
