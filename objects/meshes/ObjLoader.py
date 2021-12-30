@@ -98,5 +98,5 @@ def load_obj_file(file_location, file_name):
                 mesh_model.add_vertex(current_object_id, current_position_list[int(tokens[i+2][0])-1], current_normal_list[int(tokens[i+2][2])-1], current_uv_list[int(tokens[i+2][1])-1], is_image_file)
                 mesh_model.add_vertex(current_object_id, current_position_list[int(tokens[i+3][0])-1], current_normal_list[int(tokens[i+3][2])-1], current_uv_list[int(tokens[i+3][1])-1], is_image_file)
     mesh_model.set_opengl_buffers()
-    print("Finished loading OBJ: " + file_name)
+    # print("Finished loading OBJ: " + file_name)
     return mesh_model

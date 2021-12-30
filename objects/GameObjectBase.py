@@ -6,7 +6,9 @@ class GameObject:
         it contains common functions and variables that each game object MUST have
     """
     def __init__(self, x, y, z) -> None:
-        self.set_position(x, y, z)
+        self.x = x
+        self.y = y
+        self.z = z
     
     def set_position(self, x, y, z):
         self.x = x

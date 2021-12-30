@@ -25,6 +25,8 @@ from networking.Networking import Networking
 import asyncio
 import sys
 
+from objects.Enemy import Enemy
+
 from objects.meshes.ObjLoader import load_obj_file
 
 class StartGame:
@@ -78,6 +80,7 @@ class StartGame:
     def initializeGameObjects(self):
         self.maze = Level1(-10, 0, -10)
         self.floor = Floor(0, -0.5, 0)
+        self.enemy = Enemy(self.shader, 8, -0.15, 7, Vector(0, 0, 0))
 
         crate_texture = sys.path[0] + "\\textures\\Crate.png"
         self.cube1 = TexturedCube(0, 0.5, 0, (2, 2, 2), texture_path=crate_texture)
@@ -97,6 +100,7 @@ class StartGame:
         self.game_objects.add_object(self.floor)
         #self.game_objects.add_object(self.cube1)
         self.game_objects.add_object(self.maze)
+        self.game_objects.add_object(self.enemy)
 
     def update(self):
         delta_time = self.clock.tick() / 1000.0
