@@ -50,20 +50,22 @@ class StartGame:
 
         g_ambient = Color(10/255, 10/255, 10/255, 1.0)
 
-        self.directional_light = LightSource(Point(9, 0, 9), Color(1.0, 193/255, 7/255, 1), Color(1.0, 193/255, 7/255, 1.0), g_ambient)
-        self.directional_light.set_light_in_shader(self.shader, 0)
+        self.light_yellow = LightSource(Point(9, 0, 9), Color(1.0, 193/255, 7/255, 1), Color(1.0, 193/255, 7/255, 1.0), g_ambient)
+        self.light_yellow.set_light_in_shader(self.shader, 0)
 
-        self.directional_light = LightSource(Point(-9, 0, -9), Color(0.0, 250/255, 7/255, 1), Color(0.0, 250/255, 7/255, 1), g_ambient)
-        self.directional_light.set_light_in_shader(self.shader, 1)
+        self.light_green = LightSource(Point(-9, 0, -9), Color(0.0, 250/255, 7/255, 1), Color(0.0, 250/255, 7/255, 1), g_ambient)
+        self.light_green.set_light_in_shader(self.shader, 1)
 
-        self.directional_light = LightSource(Point(-9, 0, 9), Color(5/255, 20/255, 250/255, 1), Color(5/255, 20/255, 250/255, 1), g_ambient)
-        self.directional_light.set_light_in_shader(self.shader, 2)
+        self.light_blue = LightSource(Point(-9, 0, 9), Color(5/255, 20/255, 250/255, 1), Color(5/255, 20/255, 250/255, 1), g_ambient)
+        self.light_blue.set_light_in_shader(self.shader, 2)
 
-        self.directional_light = LightSource(Point(9, 0, -9), Color(240/255, 20/255, 7/255, 1), Color(240/255, 20/255, 7/255, 1), g_ambient)
-        self.directional_light.set_light_in_shader(self.shader, 3)
+        self.light_red = LightSource(Point(9, 0, -9), Color(240/255, 20/255, 7/255, 1), Color(240/255, 20/255, 7/255, 1), g_ambient)
+        self.light_red.set_light_in_shader(self.shader, 3)
 
         self.clock = pygame.time.Clock()
         self.clock.tick()
+
+        self.flat_shade = False
 
         self.angle = 0
         self.radius = 3
@@ -150,6 +152,45 @@ class StartGame:
                     if event.key == K_ESCAPE:
                         print("ESCAPING")
                         exiting = True
+                    if event.key == K_x:
+                        black = Color(0, 0, 0, 1)
+                        self.shader.use()
+
+                        self.flat_shade = not self.flat_shade
+                        if self.flat_shade:
+                            self.light_yellow.diffuse = black
+                            self.light_yellow.specular = black
+                            self.light_yellow.ambient = Color(150/255, 150/255, 150/255, 1)
+                            self.light_yellow.set_light_in_shader(self.shader, 0)
+
+                            self.light_green.diffuse = black
+                            self.light_green.specular = black
+                            self.light_green.set_light_in_shader(self.shader, 1)
+
+                            self.light_blue.diffuse = black
+                            self.light_blue.specular = black
+                            self.light_blue.set_light_in_shader(self.shader, 2)
+
+                            self.light_red.diffuse = black
+                            self.light_red.specular = black
+                            self.light_red.set_light_in_shader(self.shader, 3)
+                        else:
+                            g_ambient = Color(10/255, 10/255, 10/255, 1.0)
+
+                            self.light_yellow = LightSource(Point(9, 0, 9), Color(1.0, 193/255, 7/255, 1), Color(1.0, 193/255, 7/255, 1.0), g_ambient)
+                            self.light_yellow.set_light_in_shader(self.shader, 0)
+
+                            self.light_green = LightSource(Point(-9, 0, -9), Color(0.0, 250/255, 7/255, 1), Color(0.0, 250/255, 7/255, 1), g_ambient)
+                            self.light_green.set_light_in_shader(self.shader, 1)
+
+                            self.light_blue = LightSource(Point(-9, 0, 9), Color(5/255, 20/255, 250/255, 1), Color(5/255, 20/255, 250/255, 1), g_ambient)
+                            self.light_blue.set_light_in_shader(self.shader, 2)
+
+                            self.light_red = LightSource(Point(9, 0, -9), Color(240/255, 20/255, 7/255, 1), Color(240/255, 20/255, 7/255, 1), g_ambient)
+                            self.light_red.set_light_in_shader(self.shader, 3)
+
+
+
                 self.player.event_loop(event)
 
             self.update()

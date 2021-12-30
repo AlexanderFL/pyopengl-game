@@ -115,8 +115,8 @@ class TexturedCube(GameObject):
             shader.set_model_matrix(modelMatrix.matrix)
             # shader.set_material_diffuse(self.color[0], self.color[1], self.color[2])
             shader.set_material_diffuse(1, 1, 1) # TEMPORARY
-            shader.set_material_specular(0.6282, 0.5558, 0.3660)
-            shader.set_material_shininess(100)
+            shader.set_material_specular(0.05, 0.05, 0.05)
+            shader.set_material_shininess(250)
             
             self.cube.draw(shader)
             modelMatrix.pop_matrix()

@@ -27,6 +27,7 @@ class Level1(GameObject):
         longwallr = sys.path[0] + "\\textures\\longwall2.png"
         self.wall1 = TexturedCube(0, 0.2, 10, (20, 1.5, 0.1), wall_color, texture_path=longwall)
         self.wall2 = TexturedCube(0, 0.2, -10, (20, 1.5, 0.1), wall_color, texture_path=longwall)
+        
         self.wall3 = TexturedCube(10, 0.2, 0, (0.1, 1.5, 20), wall_color, texture_path=longwallr)
         self.wall4 = TexturedCube(-10, 0.2, 0, (0.1, 1.5, 20), wall_color, texture_path=longwallr)
         
