@@ -45,7 +45,7 @@ class Bullet:
 
         shader.set_model_matrix(modelMatrix.matrix)
         shader.set_material_diffuse(self.color[0], self.color[1], self.color[2])
-        # self.sphere.set_verticies(self.shader)
+        shader.set_material_specular(self.color[0], self.color[1], self.color[2])
         self.sphere.draw(self.shader)
         modelMatrix.pop_matrix()
     

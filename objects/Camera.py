@@ -11,7 +11,7 @@ class Camera:
         self.position = position
 
         self.projection_matrix = ProjectionMatrix()
-        self.projection_matrix.set_perspective(3.14159/2, SCREEN_WIDTH/SCREEN_HEIGHT, 0.001, 100)
+        self.projection_matrix.set_perspective(3.14159/2 + 0.1, SCREEN_WIDTH/SCREEN_HEIGHT, 0.001, 100)
         shader.set_projection_matrix(self.projection_matrix.get_matrix())
 
         self.viewMatrix.look(position, Point(0, 1, 0), Vector(0, 1, 0))

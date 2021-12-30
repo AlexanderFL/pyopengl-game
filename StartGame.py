@@ -158,21 +158,20 @@ class StartGame:
 
                         self.flat_shade = not self.flat_shade
                         if self.flat_shade:
-                            self.light_yellow.diffuse = black
-                            self.light_yellow.specular = black
-                            self.light_yellow.ambient = Color(150/255, 150/255, 150/255, 1)
+                            self.light_yellow.diffuse = Color(100/255, 100/255, 100/255, 1)
+                            self.light_yellow.specular = Color(100/255, 100/255, 100/255, 1)
                             self.light_yellow.set_light_in_shader(self.shader, 0)
 
-                            self.light_green.diffuse = black
-                            self.light_green.specular = black
+                            self.light_green.diffuse = Color(100/255, 100/255, 100/255, 1)
+                            self.light_green.specular = Color(100/255, 100/255, 100/255, 1)
                             self.light_green.set_light_in_shader(self.shader, 1)
 
-                            self.light_blue.diffuse = black
-                            self.light_blue.specular = black
+                            self.light_blue.diffuse = Color(100/255, 100/255, 100/255, 1)
+                            self.light_blue.specular = Color(100/255, 100/255, 100/255, 1)
                             self.light_blue.set_light_in_shader(self.shader, 2)
 
-                            self.light_red.diffuse = black
-                            self.light_red.specular = black
+                            self.light_red.diffuse = Color(100/255, 100/255, 100/255, 1)
+                            self.light_red.specular = Color(100/255, 100/255, 100/255, 1)
                             self.light_red.set_light_in_shader(self.shader, 3)
                         else:
                             g_ambient = Color(10/255, 10/255, 10/255, 1.0)
