@@ -7,7 +7,7 @@ from time import time
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from maths.Lights import DirectionalLight
+from maths.Lights import LightSource
 from maths.Color import Color
 from objects.Level1 import Level1
 
@@ -48,8 +48,19 @@ class StartGame:
 
         self.modelMatrix    = ModelMatrix()
 
-        self.directional_light = DirectionalLight(Point(9, 0, 9), Color(1.0, 193/255, 7/255, 1), Color(1.0, 193/255, 7/255, 1.0), 1)
-        self.directional_light.set_light_in_shader(self.shader)
+        g_ambient = Color(10/255, 10/255, 10/255, 1.0)
+
+        self.directional_light = LightSource(Point(9, 0, 9), Color(1.0, 193/255, 7/255, 1), Color(1.0, 193/255, 7/255, 1.0), g_ambient)
+        self.directional_light.set_light_in_shader(self.shader, 0)
+
+        self.directional_light = LightSource(Point(-9, 0, -9), Color(0.0, 250/255, 7/255, 1), Color(0.0, 250/255, 7/255, 1), g_ambient)
+        self.directional_light.set_light_in_shader(self.shader, 1)
+
+        self.directional_light = LightSource(Point(-9, 0, 9), Color(5/255, 20/255, 250/255, 1), Color(5/255, 20/255, 250/255, 1), g_ambient)
+        self.directional_light.set_light_in_shader(self.shader, 2)
+
+        self.directional_light = LightSource(Point(9, 0, -9), Color(240/255, 20/255, 7/255, 1), Color(240/255, 20/255, 7/255, 1), g_ambient)
+        self.directional_light.set_light_in_shader(self.shader, 3)
 
         self.clock = pygame.time.Clock()
         self.clock.tick()

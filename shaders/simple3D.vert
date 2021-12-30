@@ -8,13 +8,11 @@ uniform mat4 u_view_matrix;
 uniform mat4 u_projection_matrix;
 
 uniform vec4 u_eye_position;
-uniform vec4 u_light_position;
-
-// varying vec4 v_color;
+uniform vec4 u_light_position[4];
 
 varying vec4 v_normal;
-varying vec4 v_s;
-varying vec4 v_h;
+varying vec4 v_s[4];
+varying vec4 v_h[4];
 varying vec2 v_uv;
 
 void main(void)
@@ -28,10 +26,12 @@ void main(void)
     position        = u_model_matrix * position;
     v_normal        = u_model_matrix * normal;
 
-    v_s             = u_light_position - position;
+    for(int i = 0; i < 4; i++) {
 
-    vec4 v          = u_eye_position - position;
-    v_h             = v + v_s;
+        v_s[i]             = u_light_position[i] - position;
+        vec4 v             = u_eye_position - position;
+        v_h[i]             = v + v_s[i];
+    }
 
     position        = u_view_matrix * position;
     position        = u_projection_matrix * position;
