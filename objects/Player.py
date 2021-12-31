@@ -3,6 +3,8 @@ import pygame
 from pygame.locals import *
 from common_game_maths.Point import Point
 from common_game_maths.Vector import Vector
+
+from objects.GameObjects import GameObjects
 from .Camera import Camera
 from CONSTANTS import *
 from .Bullet import Bullet
@@ -37,7 +39,25 @@ class Player(GameObject):
         self.firing = False
         self.network = network
     
+    """
+    Shoot functions, spawns a bullet in the direction that the player is looking and gives it
+    momentum to propell it out in that direction.
+    
+    Requires the main GameObjects class to add it into the scene 
+    """
+    def shoot(self, game_objects : GameObjects):
+        self.firing = False
+        direction_looking = self.camera.viewMatrix.get_matrix()
+        direction_fire = Vector(direction_looking[2], -direction_looking[9], -direction_looking[0])
+        bullet_pos = Point(self.position.x, -0.1, self.position.z)
+        bullet_obj = Bullet(self.shader, bullet_pos, direction_fire)
+        game_objects.add_object(bullet_obj)
+        if self.network != None:
+            self.network.send_on_next_update(bullet_obj)
 
+    """
+    Function to fire every update
+    """
     def update(self, delta_time, game_objects):
         self._mouse_controller(delta_time)
         self._keyboard_controller()
@@ -52,32 +72,38 @@ class Player(GameObject):
             pass
         
         if self.firing:
-            self.firing = False
-            direction_looking = self.camera.viewMatrix.get_matrix()
-            direction_fire = Vector(direction_looking[2], -direction_looking[9], -direction_looking[0])
-            bullet_pos = Point(self.position.x, -0.1, self.position.z)
-            bullet_obj = Bullet(self.shader, bullet_pos, direction_fire)
-            game_objects.add_object(bullet_obj)
-            if self.network != None:
-                self.network.send_on_next_update(bullet_obj)
+            self.shoot(game_objects)
         
         self.shader.use()
         self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
         self.shader.set_eye_position(self.camera.viewMatrix.eye)
-        
+    
+    """
+    Move function of the player, should fire every update
+    """
     def move(self, delta_time):
         self.change_vec += self.velocity * delta_time * self.speed
         self.camera.move_position(self.change_vec)
     
+    """
+    Function that defines what should happen if the user is colliding with an object
+    """
     def collide(self, collision_objects):
         for collision_object in collision_objects:
-            teleport_back = self.position
-            if collision_object.collision_side[0] == 1 or collision_object.collision_side[1] == 1:
-                teleport_back.x = self.prev_position.x
-            if collision_object.collision_side[2] == 1 or collision_object.collision_side[3] == 1:
-                teleport_back.z = self.prev_position.z
-            self.camera.set_position(teleport_back)
+            if type(collision_object) == Bullet:
+                # TOOD: Health
+                pass
+            else:
+                teleport_back = self.position
+                if collision_object.collision_side[0] == 1 or collision_object.collision_side[1] == 1:
+                    teleport_back.x = self.prev_position.x
+                if collision_object.collision_side[2] == 1 or collision_object.collision_side[3] == 1:
+                    teleport_back.z = self.prev_position.z
+                self.camera.set_position(teleport_back)
 
+    """
+    event_loop() should be fired for every pygame event, registers movement and firing
+    """
     def event_loop(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0]:
@@ -105,6 +131,9 @@ class Player(GameObject):
             if event.key == K_LSHIFT:
                 self.sprint_key_down = False
 
+    """
+    Function that handles what should happen if the user is pressing a key
+    """
     def _keyboard_controller(self):
 
         if self.W_key_down:
@@ -126,6 +155,9 @@ class Player(GameObject):
         if (not self.D_key_down and not self.A_key_down):
             self.velocity.z = 0
 
+    """
+    Function that that moves the camera with the mouse and makes sure it stays within some range
+    """
     def _mouse_controller(self, delta_time):
         if pygame.mouse.get_focused():
             pygame.mouse.set_pos((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
