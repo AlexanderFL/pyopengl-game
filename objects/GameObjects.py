@@ -3,7 +3,7 @@ from typing import List
 
 class GameObjects:
     """
-        The 'GameObjects' class contains every GameObject within the scene
+        The 'GameObjects' class contains "almost" every GameObject within the scene
     """
     def __init__(self):
         self.game_objects = []

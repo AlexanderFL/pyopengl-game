@@ -1,4 +1,5 @@
 from OpenGL import GL
+from pygame.math import Vector3
 from CONSTANTS import *
 
 import pygame
@@ -9,6 +10,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from maths.Lights import LightSource
 from maths.Color import Color
+from objects.Bullet import Bullet
 from objects.Level1 import Level1
 
 from shaders.Shaders import Shader3D
@@ -107,7 +109,9 @@ class StartGame:
         self.fr_sum += delta_time
         self.fr_ticker += 1
         if self.fr_sum > 1.0:
-            print(self.fr_ticker / self.fr_sum)
+            b = Bullet(self.shader, position=Point(8, 0, 8), direction=Vector3(1, 0, 0))
+            self.game_objects.add_object(b)
+            # print(self.fr_ticker / self.fr_sum)
             self.fr_sum = 0
             self.fr_ticker = 0
 

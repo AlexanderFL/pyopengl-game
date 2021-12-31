@@ -22,6 +22,9 @@ class Camera:
     def turn(self, angle):
         self.viewMatrix.turn(angle, True)
     
+    def look_at(self, point):
+        self.look(self.position, point, Vector(0, 1, 0))
+    
     def look(self, position, center, up):
         self.viewMatrix.look(position, center, up)
     
@@ -30,6 +33,9 @@ class Camera:
         self.viewMatrix.move_forward(change.x)
         self.viewMatrix.move_sideways(change.z)
         self.position = move_vec
-
+    
     def set_position(self, position):
+        self.position = position
+
+    def set_eye_position(self, position):
         self.viewMatrix.eye = position

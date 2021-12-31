@@ -44,6 +44,7 @@ class Floor(GameObject):
 
     def draw(self, modelMatrix, shader:Shader3D, update_shader=False) -> None:
         # Implement the draw call
+        shader.use()
         modelMatrix.load_identity()
         modelMatrix.push_matrix()
 

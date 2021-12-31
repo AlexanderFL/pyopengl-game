@@ -17,11 +17,38 @@ class Bullet:
 
         self.color = (1, 0.0, 0.0)
         self.sphere = SpherePrimative()
+        self.scale = 1
 
         self.destroy = False
     
     def collision(self, player_pos):
-        pass
+        self.collision_side = [0, 0, 0, 0]
+        p_x = player_pos.x
+        p_z = player_pos.z
+
+        x1 = self.position.x + (self.scale/6 + 0.2)
+        x2 = self.position.x - (self.scale/6 + 0.2)
+
+        z1 = self.position.z + (self.scale/6 + 0.2)
+        z2 = self.position.z - (self.scale/6 + 0.2)
+
+        if p_x <= x1 and p_x >= x2 and p_z <= z1 and p_z >= z2:
+            x_h1 = abs(p_x - x1)
+            x_h2 = abs(p_x - x2)
+            z_h1 = abs(p_z - z1)
+            z_h2 = abs(p_z - z2)
+
+            if x_h1 < x_h2 and x_h1 < z_h1 and x_h1 < z_h2:
+                self.collision_side[0] = 1
+            elif x_h2 < x_h1 and x_h2 < z_h1 and x_h2 < z_h2:
+                self.collision_side[1] = 1
+            elif z_h1 < x_h1 and z_h1 < x_h2 and z_h1 < z_h2:
+                self.collision_side[2] = 1
+            elif z_h2 < x_h1 and z_h2 < x_h2 and z_h2 < z_h1:
+                self.collision_side[3] = 1
+            self.colliding = True
+            return self
+        return None
     
     def update(self, delta_time, game_objects):
         self.position += self.direction * delta_time * self.speed
@@ -32,9 +59,10 @@ class Bullet:
             self.destroy = True
         
         collision_objects = game_objects.check_collision(self.position)
-
-        if collision_objects != []:
-            self.destroy = True
+        
+        for obj in collision_objects:
+            if type(obj) != Bullet:
+                self.destroy = True
 
     def draw(self, modelMatrix, shader, update_shader=False):
         modelMatrix.load_identity()

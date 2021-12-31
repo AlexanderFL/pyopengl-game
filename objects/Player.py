@@ -1,14 +1,15 @@
 import json
 import pygame
 from pygame.locals import *
-from common_game_maths.Point import Point
+from maths.Point import Point
 from common_game_maths.Vector import Vector
 
-from objects.GameObjects import GameObjects
 from .Camera import Camera
 from CONSTANTS import *
 from .Bullet import Bullet
 from .GameObjectBase import GameObject
+
+from random import randint
 
 class Player(GameObject):
     def __init__(self, shader, position=Point(0,0,0), network = None) -> None:
@@ -38,6 +39,28 @@ class Player(GameObject):
 
         self.firing = False
         self.network = network
+
+        self.destroy = False
+
+        self.dead = False
+        self.death_positions = {"position": Point(15, 5, 0), "lookat": Point(0, 1, 0)}
+
+        # Bullets that the player shoots, so that he doesn't collide with his own bullets at the start
+        self.owned_bullets = []
+
+        # Respawn logic variables
+        self.respawn_point_picked = False
+        self.respawn_points = [Point(9, 0, 9), Point(-9, 0, -9), Point(-9, 0, 9), Point(9, 0, -9)]
+
+        self.defined_bezier_points = [Point(15, 5, 0), Point(0, 10, 0), Point(9, 0, 9)]
+        self.time = 0
+    
+    def bezier(self, points):
+        p1 = points[0] * ((1-self.time) * (1-self.time))
+        p2 = points[1] * (2 * (1 - self.time) * self.time)
+        p3 = points[2] * (self.time * self.time)
+        return p1 + p2 + p3
+
     
     """
     Shoot functions, spawns a bullet in the direction that the player is looking and gives it
@@ -45,13 +68,14 @@ class Player(GameObject):
     
     Requires the main GameObjects class to add it into the scene 
     """
-    def shoot(self, game_objects : GameObjects):
+    def shoot(self, game_objects):
         self.firing = False
         direction_looking = self.camera.viewMatrix.get_matrix()
         direction_fire = Vector(direction_looking[2], -direction_looking[9], -direction_looking[0])
         bullet_pos = Point(self.position.x, -0.1, self.position.z)
         bullet_obj = Bullet(self.shader, bullet_pos, direction_fire)
         game_objects.add_object(bullet_obj)
+        self.owned_bullets.append(bullet_obj)
         if self.network != None:
             self.network.send_on_next_update(bullet_obj)
 
@@ -59,24 +83,55 @@ class Player(GameObject):
     Function to fire every update
     """
     def update(self, delta_time, game_objects):
-        self._mouse_controller(delta_time)
-        self._keyboard_controller()
+        if self.dead:
+            if self.respawn_point_picked == False:
+                rand = randint(0, 3)
+                self.defined_bezier_points[2] = self.respawn_points[rand]
+                self.respawn_point_picked = True
+                
+            self.time += (delta_time / 4)
+            if self.time >= 1:
+                self.dead = False
+                self.time = 1
+            test = self.bezier(self.defined_bezier_points)
+            
+            if self.time < 1:
+                self.camera.set_position(test)
+                self.camera.look_at(self.death_positions["lookat"])
+                self.shader.use()
+                self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
+                self.shader.set_eye_position(self.camera.viewMatrix.eye)
+            else:
+                self.shader.use()
+                self.position = self.defined_bezier_points[2]
+                self.prev_position = self.position
+                self.camera = Camera(self.shader, self.defined_bezier_points[2])
+                self.change_vec = Vector(self.position.x, self.position.y, self.position.z)
+                self.respawn_point_picked = False
+                self.time = 0
+        else:
+            self._mouse_controller(delta_time)
+            self._keyboard_controller()
 
-        self.move(delta_time)
-        self.prev_position = self.position
-        self.position = self.camera.viewMatrix.eye
-        collision_objects = game_objects.check_collision(self.position)
+            self.move(delta_time)
+            self.prev_position = self.position
+            self.position = self.camera.viewMatrix.eye
+            collision_objects = game_objects.check_collision(self.position)
 
-        if collision_objects != []:
-            self.collide(collision_objects)
-            pass
-        
-        if self.firing:
-            self.shoot(game_objects)
-        
-        self.shader.use()
-        self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
-        self.shader.set_eye_position(self.camera.viewMatrix.eye)
+            if collision_objects != []:
+                self.collide(collision_objects)
+                pass
+            
+            if self.firing:
+                self.shoot(game_objects)
+            
+            for bullet in self.owned_bullets:
+                if bullet.destroy == True:
+                    self.owned_bullets.remove(bullet)
+            
+            self.shader.use()
+            self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
+            self.shader.set_eye_position(self.camera.viewMatrix.eye)
     
     """
     Move function of the player, should fire every update
@@ -84,22 +139,22 @@ class Player(GameObject):
     def move(self, delta_time):
         self.change_vec += self.velocity * delta_time * self.speed
         self.camera.move_position(self.change_vec)
-    
+
     """
     Function that defines what should happen if the user is colliding with an object
     """
     def collide(self, collision_objects):
         for collision_object in collision_objects:
             if type(collision_object) == Bullet:
-                # TOOD: Health
-                pass
+                if collision_object not in self.owned_bullets:
+                    self.dead = True
             else:
                 teleport_back = self.position
                 if collision_object.collision_side[0] == 1 or collision_object.collision_side[1] == 1:
                     teleport_back.x = self.prev_position.x
                 if collision_object.collision_side[2] == 1 or collision_object.collision_side[3] == 1:
                     teleport_back.z = self.prev_position.z
-                self.camera.set_position(teleport_back)
+                self.camera.set_eye_position(teleport_back)
 
     """
     event_loop() should be fired for every pygame event, registers movement and firing

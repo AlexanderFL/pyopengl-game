@@ -1,6 +1,4 @@
-from OpenGL.GL.exceptional import glBegin, glEnd
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES, glColor3f, glVertex2f, glVertex3f
-from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
+from pygame import Vector3
 from objects.GameObjectBase import GameObject
 from maths.Point import Point
 from maths.Vector import Vector
@@ -14,14 +12,24 @@ class Enemy(GameObject):
         self.scale = 1
         self.rotate = rotate
         self.collision_side = [0, 0, 0, 0]
+        self.colliding = False
 
         obj_location = sys.path[0] + "\\models\\"
         filename = "bean.obj"
         self.model = load_obj_file(obj_location, filename)
         self.destroy = False
     
-    def update(self, delta_time, som) -> None:
+    def shoot_bullet(self, bullet_obj):
+        pass
+    
+    def update(self, delta_time, game_objects) -> None:
         self.rotate.y += delta_time
+
+        if self.colliding == True:
+            pass
+            # self.destroy = True
+
+        self.colliding = False
     
     def collision(self, player_pos) -> GameObject:
         # Implement collision
@@ -49,6 +57,7 @@ class Enemy(GameObject):
                 self.collision_side[2] = 1
             elif z_h2 < x_h1 and z_h2 < x_h2 and z_h2 < z_h1:
                 self.collision_side[3] = 1
+            self.colliding = True
             return self
         return None
     
