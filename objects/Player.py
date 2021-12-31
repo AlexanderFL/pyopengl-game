@@ -51,14 +51,17 @@ class Player(GameObject):
         # Respawn logic variables
         self.respawn_point_picked = False
         self.respawn_points = [Point(9, 0, 9), Point(-9, 0, -9), Point(-9, 0, 9), Point(9, 0, -9)]
-
+        # Bezier points that the respawn will use, last one updates if user dies
         self.defined_bezier_points = [Point(15, 5, 0), Point(0, 10, 0), Point(9, 0, 9)]
         self.time = 0
     
-    def bezier(self, points):
-        p1 = points[0] * ((1-self.time) * (1-self.time))
-        p2 = points[1] * (2 * (1 - self.time) * self.time)
-        p3 = points[2] * (self.time * self.time)
+    """
+    Bezier formula for 3 points
+    """
+    def bezier(self):
+        p1 = self.defined_bezier_points[0] * ((1-self.time) * (1-self.time))
+        p2 = self.defined_bezier_points[1] * (2 * (1 - self.time) * self.time)
+        p3 = self.defined_bezier_points[2] * (self.time * self.time)
         return p1 + p2 + p3
 
     
@@ -84,24 +87,28 @@ class Player(GameObject):
     """
     def update(self, delta_time, game_objects):
         if self.dead:
+            # If the player is dead, animate him respawning at a random position
             if self.respawn_point_picked == False:
                 rand = randint(0, 3)
                 self.defined_bezier_points[2] = self.respawn_points[rand]
                 self.respawn_point_picked = True
-                
+            
+            # Increment 'time' for the bezier path
             self.time += (delta_time / 4)
             if self.time >= 1:
                 self.dead = False
                 self.time = 1
-            test = self.bezier(self.defined_bezier_points)
+            bezier_motion_pos = self.bezier()
             
             if self.time < 1:
-                self.camera.set_position(test)
+                # Update the camera and shader matricies
+                self.camera.set_position(bezier_motion_pos)
                 self.camera.look_at(self.death_positions["lookat"])
                 self.shader.use()
                 self.shader.set_view_matrix(self.camera.viewMatrix.get_matrix())
                 self.shader.set_eye_position(self.camera.viewMatrix.eye)
             else:
+                # Last code to execude before player is alive again, resets lots of numbers
                 self.shader.use()
                 self.position = self.defined_bezier_points[2]
                 self.prev_position = self.position
@@ -110,6 +117,7 @@ class Player(GameObject):
                 self.respawn_point_picked = False
                 self.time = 0
         else:
+            # Player is alive and can play normally
             self._mouse_controller(delta_time)
             self._keyboard_controller()
 
