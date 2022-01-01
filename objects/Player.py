@@ -1,8 +1,9 @@
 import json
 import pygame
 from pygame.locals import *
+from maths.Material import Material
 from maths.Point import Point
-from common_game_maths.Vector import Vector
+from maths.Vector import Vector
 
 from .Camera import Camera
 from CONSTANTS import *
@@ -13,9 +14,9 @@ from random import randint
 
 class Player(GameObject):
     def __init__(self, shader, position=Point(0,0,0), network = None) -> None:
-        self.shader = shader
+        super().__init__(shader, position, Vector(0,0,0), Vector(0,0,0), Material())
+        
         self.prev_position = position
-        self.position = position
 
         self.change_vec = Vector(position.x, position.y, position.z)
         self.velocity = Vector(0, 0, 0)
@@ -39,8 +40,6 @@ class Player(GameObject):
 
         self.firing = False
         self.network = network
-
-        self.destroy = False
 
         self.dead = False
         self.death_positions = {"position": Point(15, 5, 0), "lookat": Point(0, 1, 0)}
@@ -125,7 +124,7 @@ class Player(GameObject):
             self.move(delta_time)
             self.prev_position = self.position
             self.position = self.camera.viewMatrix.eye
-            collision_objects = game_objects.check_collision(self.position)
+            collision_objects = game_objects.check_collision(self)
 
             if collision_objects != []:
                 self.collide(collision_objects)

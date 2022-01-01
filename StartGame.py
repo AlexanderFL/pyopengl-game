@@ -10,6 +10,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from maths.Lights import LightSource
 from maths.Color import Color
+from maths.Material import Material
 from objects.Bullet import Bullet
 from objects.Level1 import Level1
 
@@ -80,17 +81,14 @@ class StartGame:
         self.fr_sum = 0
 
     def initializeGameObjects(self):
-        self.maze = Level1(-10, 0, -10)
-        self.floor = Floor(0, -0.5, 0)
-        self.enemy = Enemy(self.shader, 8, -0.15, 7, Vector(0, 0, 0))
-
-        crate_texture = sys.path[0] + "\\textures\\Crate.png"
-        self.cube1 = TexturedCube(0, 0.5, 0, (2, 2, 2), texture_path=crate_texture)
+        self.level1 = Level1(self.shader, Point(-10, 0, -10))
+        self.floor = Floor(self.shader, Point(0, -0.5, 0), Vector(0,0,0), Vector(20, 0.1, 20), Material())
+        self.enemy = Enemy(self.shader, Point(8, -0.15, 7), Vector(0, 0, 0), Vector(1, 1, 1), Material())
 
         if self.is_networking:
-            self.player = Player(self.shader, Point(9, 0, 9), self.server)
+            self.player = Player(self.shader, Point(9, 0, 9), network=self.server)
         else:
-            self.player = Player(self.shader, Point(9, 0, 9), None)
+            self.player = Player(self.shader, Point(9, 0, 9), network=None)
         
         obj_file_path = sys.path[0] + "\\models"
         obj_file_name = "crate.obj"
@@ -99,9 +97,8 @@ class StartGame:
         # Game objects that should be in the scene
         # Note: The player is handled seperately from other objects
         self.game_objects = GameObjects()
+        self.game_objects.add_object(self.level1)
         self.game_objects.add_object(self.floor)
-        #self.game_objects.add_object(self.cube1)
-        self.game_objects.add_object(self.maze)
         self.game_objects.add_object(self.enemy)
 
     def update(self):

@@ -1,4 +1,5 @@
 
+from maths.Color import Color
 from objects.GameObjectBase import GameObject
 from objects.TexturedCube import CubePrimative
 from shaders.Shaders import Shader3D
@@ -11,11 +12,12 @@ class Floor(GameObject):
     """
         The floor gameobject
     """
-    def __init__(self, x, y, z, size=20):
-        super().__init__(x, y, z)
-        self.size = size
+    def __init__(self, shader : Shader3D, position, rotation, scale, material, visible=True):
+        material.specular = Color(80/255, 123/255, 231/255)
+        material.diffuse = Color(80/255, 123/255, 231/255)
+        material.shininess = 1
+        super().__init__(shader, position, rotation, scale, material, visible)
         self.cube = CubePrimative()
-        self.destroy = False
 
         floor_texture = sys.path[0] + "\\textures\\metal_big_floor-min.png"
         self.texture_id = self.load_texture(floor_texture)
@@ -42,23 +44,23 @@ class Floor(GameObject):
         # Skip collision checking
         return None
 
-    def draw(self, modelMatrix, shader:Shader3D, update_shader=False) -> None:
+    def draw(self, modelMatrix) -> None:
         # Implement the draw call
-        shader.use()
+        self.shader.use()
         modelMatrix.load_identity()
         modelMatrix.push_matrix()
 
-        modelMatrix.add_translation(self.x, self.y, self.z)
-        modelMatrix.add_scale(self.size, 0.1, self.size)
+        modelMatrix.add_translation(self.position.x, self.position.y, self.position.z)
+        modelMatrix.add_scale(self.scale.x, self.scale.y, self.scale.z)
 
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, self.texture_id)
 
-        shader.set_material_specular(80/255, 123/255, 231/255)
-        shader.set_material_diffuse(80/255, 123/255, 231/255)
-        shader.set_material_shininess(1)
-        shader.set_model_matrix(modelMatrix.matrix)
-        self.cube.draw(shader)
+        self.shader.set_material_specular(80/255, 123/255, 231/255)
+        self.shader.set_material_diffuse(80/255, 123/255, 231/255)
+        self.shader.set_material_shininess(1)
+        self.shader.set_model_matrix(modelMatrix.matrix)
+        self.cube.draw(self.shader)
         modelMatrix.pop_matrix()
     
     def update(self, delta_time, game_objects):
