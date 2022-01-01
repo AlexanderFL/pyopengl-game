@@ -2,6 +2,7 @@ from pygame import Vector3
 from objects.GameObjectBase import GameObject
 from maths.Point import Point
 from maths.Vector import Vector
+from objects.Player import Player
 from .meshes.ObjLoader import load_obj_file
 import sys
 
@@ -25,11 +26,9 @@ class Enemy(GameObject):
     def update(self, delta_time, game_objects) -> None:
         self.rotate.y += delta_time
 
-        if self.colliding == True:
-            pass
-            # self.destroy = True
-
-        self.colliding = False
+        # WIP
+        #collision_objects = game_objects.check_collision(Point(self.x, self.y, self.z))
+        #print(collision_objects)
     
     def collision(self, player_pos) -> GameObject:
         # Implement collision
@@ -57,7 +56,6 @@ class Enemy(GameObject):
                 self.collision_side[2] = 1
             elif z_h2 < x_h1 and z_h2 < x_h2 and z_h2 < z_h1:
                 self.collision_side[3] = 1
-            self.colliding = True
             return self
         return None
     

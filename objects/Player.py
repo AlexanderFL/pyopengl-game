@@ -116,6 +116,7 @@ class Player(GameObject):
                 self.change_vec = Vector(self.position.x, self.position.y, self.position.z)
                 self.respawn_point_picked = False
                 self.time = 0
+                self.first_mouse = True
         else:
             # Player is alive and can play normally
             self._mouse_controller(delta_time)
