@@ -193,8 +193,6 @@ class StartGame:
                             self.light_red = LightSource(Point(9, 0, -9), Color(240/255, 20/255, 7/255, 1), Color(240/255, 20/255, 7/255, 1), g_ambient)
                             self.light_red.set_light_in_shader(self.shader, 3)
 
-
-
                 self.player.event_loop(event)
 
             self.update()

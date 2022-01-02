@@ -6,6 +6,7 @@ from maths.Color import Color
 from objects.primatives.SpherePrimative import SpherePrimative
 from .GameObjectBase import GameObject
 from maths.Material import Material
+from builtins import staticmethod
 
 class Bullet(GameObject):
     def __init__(self, shader, position=Point(1, 1, 1), direction=Vector(1, 0, 0)):
@@ -34,7 +35,7 @@ class Bullet(GameObject):
     def draw(self, modelMatrix):
         self._draw(modelMatrix, self.sphere)
     
-    def get_dict(self):
+    def serialize(self):
         bullet_dict = {
             'direction':
             {
@@ -49,4 +50,9 @@ class Bullet(GameObject):
                 'z': self.position.z
             }
         }
+        return json.dumps(bullet_dict)
+    
+    @staticmethod
+    def deserialize(json_obj):
+        bullet_dict = json.loads(json_obj)
         return bullet_dict

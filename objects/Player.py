@@ -259,12 +259,13 @@ class Player(GameObject):
                 self.yaw = 0
                 self.first_mouse = False
     
-    def get_dict(self):
+    def serialize(self):
         player_dict = {
             "position": {
                 "x": self.position.x,
                 "y": self.position.y,
                 "z": self.position.z
-            }
+            },
+            "dead": self.dead
         }
-        return player_dict
+        return json.dumps(player_dict)

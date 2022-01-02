@@ -1,3 +1,4 @@
+import json
 from pygame import Vector3
 from objects.GameObjectBase import GameObject
 from maths.Point import Point
@@ -27,3 +28,11 @@ class Enemy(GameObject):
     
     def draw(self, modelMatrix) -> GameObject:
         self._draw(modelMatrix, self.model)
+    
+    def deserialize(self, p_json):
+        p_dict = json.loads(p_json)
+        position = p_dict["position"]
+        visible = not p_dict["dead"]
+        
+        self.position = Vector(position["x"], position["y"], position["z"])
+        self.visible = visible

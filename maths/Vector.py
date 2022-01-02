@@ -32,3 +32,6 @@ class Vector:
 
     def cross(self, other):
         return Vector(self.y*other.z - self.z*other.y, self.z*other.x - self.x*other.z, self.x*other.y - self.y*other.x)
+    
+    def __str__(self):
+        return "Vector(%s, %s %s)" % (self.x, self.y ,self.z)
