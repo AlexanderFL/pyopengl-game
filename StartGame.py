@@ -112,14 +112,16 @@ class StartGame:
         self.fr_sum += delta_time
         self.fr_ticker += 1
         if self.fr_sum > 1.0:
-            b = Bullet(self.shader, position=Point(8, 0, 8), direction=Vector3(1, 0, 0))
-            self.game_objects.add_object(b)
+            #b = Bullet(self.shader, position=Point(8, 0, 8), direction=Vector3(1, 0, 0))
+            #self.game_objects.add_object(b)
             # print(self.fr_ticker / self.fr_sum)
             self.fr_sum = 0
             self.fr_ticker = 0
 
         self.network_sum += delta_time
         if self.network_sum > 1.0/120:
+            # Networking code that handles spawning in new players when they connect
+            # as well as updating their position etc.
             self.server.send(self.player.serialize())
             data : List[dict] = self.server.recv()
             if data != None:
@@ -128,11 +130,23 @@ class StartGame:
                         item_in = False
                         for enemy in self.enemy_list:
                             if item["uid"] == enemy.network_uid:
+                                # Update the existing player info
                                 item_in = True
                                 obj_position = item["data"]["position"]
                                 enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
                                 enemy.set_position(enemy_pos)
+                                enemy.visible = not item["data"]["dead"]
+                                bullet_l = item["data"]["bullets"]
+                                for b in bullet_l:
+                                    bullet_pos = b["data"]["position"]
+                                    bullet_dir = b["data"]["direction"]
+                                    bp = Point(bullet_pos["x"], bullet_pos["y"], bullet_pos["z"])
+                                    bd = Vector(bullet_dir["x"], bullet_dir["y"], bullet_dir["z"])
+                                    new_b = Bullet(self.shader, bp, bd)
+                                    new_b.network_uid = b["uid"]
+                                    enemy.add_to_owned_bullets(new_b, self.game_objects)
                         if not item_in:
+                            # Spawn a new player
                             obj_position = item["data"]["position"]
                             enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
                             new_enemy = Enemy(self.shader, enemy_pos, Vector(0, 1, 0), Vector(1, 1, 1), Material())
