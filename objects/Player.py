@@ -86,6 +86,7 @@ class Player(GameObject):
     Function to fire every update
     """
     def update(self, delta_time, game_objects):
+        print(self.camera.viewMatrix.get_matrix())
         if self.dead:
             # If the player is dead, animate him respawning at a random position
             if self.respawn_point_picked == False:

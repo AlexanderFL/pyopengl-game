@@ -30,6 +30,9 @@ class Networking:
     def connect(self):
         try:
             self.socket.connect((self.ip, self.port))
+        except socket.timeout as timeout:
+            print(timeout.strerror)
+            return -1
         except TimeoutError as timeout:
             print(timeout.strerror)
             return -1

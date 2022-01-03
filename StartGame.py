@@ -113,43 +113,44 @@ class StartGame:
             self.fr_sum = 0
             self.fr_ticker = 0
 
-        self.network_sum += delta_time
-        if self.network_sum > 1.0/120:
-            # Networking code that handles spawning in new players when they connect
-            # as well as updating their position etc.
-            self.server.send(self.player.serialize())
-            data : List[dict] = self.server.recv()
-            if data != None:
-                for item in data:
-                    if item["uid"] != self.player.network_uid:
-                        item_in = False
-                        for enemy in self.enemy_list:
-                            if item["uid"] == enemy.network_uid:
-                                # Update the existing player info
-                                item_in = True
+        if self.is_networking:
+            self.network_sum += delta_time
+            if self.network_sum > 1.0/120:
+                # Networking code that handles spawning in new players when they connect
+                # as well as updating their position etc.
+                self.server.send(self.player.serialize())
+                data : List[dict] = self.server.recv()
+                if data != None:
+                    for item in data:
+                        if item["uid"] != self.player.network_uid:
+                            item_in = False
+                            for enemy in self.enemy_list:
+                                if item["uid"] == enemy.network_uid:
+                                    # Update the existing player info
+                                    item_in = True
+                                    obj_position = item["data"]["position"]
+                                    enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
+                                    enemy.set_position(enemy_pos)
+                                    enemy.visible = not item["data"]["dead"]
+                                    bullet_l = item["data"]["bullets"]
+                                    for b in bullet_l:
+                                        bullet_pos = b["data"]["position"]
+                                        bullet_dir = b["data"]["direction"]
+                                        bp = Point(bullet_pos["x"], bullet_pos["y"], bullet_pos["z"])
+                                        bd = Vector(bullet_dir["x"], bullet_dir["y"], bullet_dir["z"])
+                                        new_b = Bullet(self.shader, bp, bd)
+                                        new_b.network_uid = b["uid"]
+                                        enemy.add_to_owned_bullets(new_b, self.game_objects)
+                            if not item_in:
+                                # Spawn a new player
                                 obj_position = item["data"]["position"]
                                 enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
-                                enemy.set_position(enemy_pos)
-                                enemy.visible = not item["data"]["dead"]
-                                bullet_l = item["data"]["bullets"]
-                                for b in bullet_l:
-                                    bullet_pos = b["data"]["position"]
-                                    bullet_dir = b["data"]["direction"]
-                                    bp = Point(bullet_pos["x"], bullet_pos["y"], bullet_pos["z"])
-                                    bd = Vector(bullet_dir["x"], bullet_dir["y"], bullet_dir["z"])
-                                    new_b = Bullet(self.shader, bp, bd)
-                                    new_b.network_uid = b["uid"]
-                                    enemy.add_to_owned_bullets(new_b, self.game_objects)
-                        if not item_in:
-                            # Spawn a new player
-                            obj_position = item["data"]["position"]
-                            enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
-                            new_enemy = Enemy(self.shader, enemy_pos, Vector(0, 1, 0), Vector(1, 1, 1), Material())
-                            new_enemy.network_uid = item["uid"]
-                            self.enemy_list.append(new_enemy)
-                            self.game_objects.add_object(new_enemy)                
+                                new_enemy = Enemy(self.shader, enemy_pos, Vector(0, 1, 0), Vector(1, 1, 1), Material())
+                                new_enemy.network_uid = item["uid"]
+                                self.enemy_list.append(new_enemy)
+                                self.game_objects.add_object(new_enemy)                
 
-            self.network_sum = 0
+                self.network_sum = 0
 
         # Update all objects in the scene, including the player
         self.game_objects.update_objects(delta_time)
@@ -164,7 +165,10 @@ class StartGame:
     def display(self):
         # Make sure that the projection is in perspective
         self.player.camera.projection_matrix.set_perspective(3.14159/2, SCREEN_WIDTH/SCREEN_HEIGHT, 0.001, 100)
-        glClearColor(66/255, 135/255, 245/255, 1.0)
+        if self.is_networking:
+            glClearColor(66/255, 135/255, 245/255, 1.0)
+        else:
+            glClearColor(150/255, 25/255, 25/255, 1.0)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_DEPTH_CLAMP)
