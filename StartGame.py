@@ -23,6 +23,7 @@ from objects.Floor import Floor
 from objects.Player import Player
 from objects.TexturedCube import TexturedCube
 from objects.primatives.Crosshair import Crosshair
+from typing import List
 
 from networking.Networking import Networking
 import asyncio
@@ -81,6 +82,7 @@ class StartGame:
         self.fr_sum = 0
 
         self.network_sum = 0
+        self.enemy_list : List[Enemy] = []
 
     def initializeGameObjects(self):
         self.level1 = Level1(self.shader, Point(-10, 0, -10))
@@ -103,7 +105,7 @@ class StartGame:
         self.game_objects = GameObjects()
         self.game_objects.add_object(self.level1)
         self.game_objects.add_object(self.floor)
-        self.game_objects.add_object(self.enemy)
+        # self.game_objects.add_object(self.enemy)
 
     def update(self):
         delta_time = self.clock.tick() / 1000.0
@@ -119,9 +121,25 @@ class StartGame:
         self.network_sum += delta_time
         if self.network_sum > 1.0/120:
             self.server.send(self.player.serialize())
-            data = self.server.recv()
-            if data == None:
-                pass
+            data : List[dict] = self.server.recv()
+            if data != None:
+                for item in data:
+                    if item["uid"] != self.player.network_uid:
+                        item_in = False
+                        for enemy in self.enemy_list:
+                            if item["uid"] == enemy.network_uid:
+                                item_in = True
+                                obj_position = item["data"]["position"]
+                                enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
+                                enemy.set_position(enemy_pos)
+                        if not item_in:
+                            obj_position = item["data"]["position"]
+                            enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
+                            new_enemy = Enemy(self.shader, enemy_pos, Vector(0, 1, 0), Vector(1, 1, 1), Material())
+                            new_enemy.network_uid = item["uid"]
+                            self.enemy_list.append(new_enemy)
+                            self.game_objects.add_object(new_enemy)                
+
             self.network_sum = 0
 
         # Update all objects in the scene, including the player

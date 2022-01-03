@@ -82,12 +82,10 @@ class Networking:
 
             try:
                 load_data = json.loads(data)
-                print(load_data)
+                return load_data
             except JSONDecodeError as error:
                 print("Recv() error -> %s, data recieved: %s" % (error.msg, data))
                 return None
-            
-            return load_data
         return None
     
     def send(self, data:str):

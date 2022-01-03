@@ -15,12 +15,14 @@ class Enemy(GameObject):
         obj_location = sys.path[0] + "\\models\\"
         filename = "bean.obj"
         self.model = load_obj_file(obj_location, filename)
+        self.network_uid = None
     
     def shoot_bullet(self, bullet_obj):
         pass
     
     def update(self, delta_time, game_objects) -> None:
-        self.rotation.y += delta_time
+        pass
+        # self.rotation.y += delta_time
 
         # WIP
         #collision_objects = game_objects.check_collision(Point(self.x, self.y, self.z))
