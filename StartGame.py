@@ -34,7 +34,7 @@ from objects.meshes.ObjLoader import load_obj_file
 
 class StartGame:
     def __init__(self):
-        self.is_networking = False
+        self.is_networking = True
 
         pygame.init()
         pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.OPENGL|pygame.DOUBLEBUF)
@@ -80,13 +80,17 @@ class StartGame:
         self.fr_ticker = 0
         self.fr_sum = 0
 
+        self.network_sum = 0
+
     def initializeGameObjects(self):
         self.level1 = Level1(self.shader, Point(-10, 0, -10))
         self.floor = Floor(self.shader, Point(0, -0.5, 0), Vector(0,0,0), Vector(20, 0.1, 20), Material())
         self.enemy = Enemy(self.shader, Point(8, -0.15, 7), Vector(0, 0, 0), Vector(1, 1, 1), Material())
 
         if self.is_networking:
+            init = self.server.do_initial_exchange()
             self.player = Player(self.shader, Point(9, 0, 9), network=self.server)
+            self.player.network_uid = init
         else:
             self.player = Player(self.shader, Point(9, 0, 9), network=None)
         
@@ -112,17 +116,23 @@ class StartGame:
             self.fr_sum = 0
             self.fr_ticker = 0
 
+        self.network_sum += delta_time
+        if self.network_sum > 1.0/120:
+            self.server.send(self.player.serialize())
+            data = self.server.recv()
+            if data == None:
+                pass
+            self.network_sum = 0
+
         # Update all objects in the scene, including the player
         self.game_objects.update_objects(delta_time)
         self.player.update(delta_time, self.game_objects)
         
         # Networking stuff
         if self.is_networking:
-            self.server.send_on_next_update(self.player)
-
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            result = loop.run_until_complete(self.server.update())
+            pass
+            # self.server.send_on_next_update(self.player)
+            #self.server.send(self.player.serialize())
 
     def display(self):
         # Make sure that the projection is in perspective

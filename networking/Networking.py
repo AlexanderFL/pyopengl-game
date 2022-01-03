@@ -10,6 +10,7 @@ from objects.Player import Player
 from objects.Bullet import Bullet
 from maths.Point import Point
 from time import time
+from select import select
 
 class Networking:
     def __init__(self, ip, port=7532):
@@ -18,7 +19,7 @@ class Networking:
         self.connected = False
     
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.settimeout(0.1)
 
         self.timer = time()
         self.server_rate = 240
@@ -29,7 +30,6 @@ class Networking:
     def connect(self):
         try:
             self.socket.connect((self.ip, self.port))
-            # self.socket.setblocking(0)
         except TimeoutError as timeout:
             print(timeout.strerror)
             return -1
@@ -56,53 +56,39 @@ class Networking:
             print("Sending data")
             for object in self.buffer:
                 if type(object) == Player:
-                    object_ser = object.serialize() #
-                    self.send(object_ser)
-                elif type(object) == Bullet:
-                    object_ser = self.serialize_bullet_data(object)
+                    object_ser = object.serialize()
                     self.send(object_ser)
             self.buffer.clear()
 
-            #data = self.recv()
+            data = self.recv()
             self.server_counter += 1
         if self.server_counter > self.server_rate - 1:
             self.timer = time()
             self.server_counter = 0
         return data
-
-    def serialize_player_data(self, player_data : Player):
-        if type(player_data) == Player:
-            new_dict = { 
-                "player": player_data.serialize()
-            }
-            return json.dumps(new_dict)
-    
-    def serialize_bullet_data(self, bullet_data : Bullet):
-        new_dict = {
-            "bullet": bullet_data.serialize()
-        }
-        return json.dumps(new_dict)
-        
     
     def recv(self):
-        data = None
-        try:
-            data = self.socket.recv(1024)
-        except BlockingIOError as ioblock:
-            return None
+        r, _, _ = select([self.socket], [], [])
+        if r:
 
-        if not data:
-            return None
-        data = data.decode('utf-8')
+            try:
+                data, _ = self.socket.recvfrom(2048)
+            except BlockingIOError:
+                print("BlockingError")
+                return None
 
-        try:
-            data = json.loads(data)
-            print(data)
-        except JSONDecodeError as error:
-            print("Recv() error -> %s, data recieved: %s" % (error.msg, data))
-            return None
-        
-        return data
+            if not data:
+                return None
+
+            try:
+                load_data = json.loads(data)
+                print(load_data)
+            except JSONDecodeError as error:
+                print("Recv() error -> %s, data recieved: %s" % (error.msg, data))
+                return None
+            
+            return load_data
+        return None
     
     def send(self, data:str):
         try:
@@ -121,8 +107,8 @@ class Networking:
                 try:
                     uid = load_results["init"]
                     self.socket.sendall(results)
-                    # TODO: More verification needed
-                    # Need to be sure that I recieved the correct uid and no bit flipping has occured
+                    # TODO: More verification would be better 
+                    # To be sure that I recieved the correct uid and no weird data arrived
                     return uid
                 except KeyError:
                     pass
@@ -151,7 +137,7 @@ if __name__ == "__main__":
     if init == None:
         exit()
     p.network_uid = init
-
+    
     c = 0
     while c <= 60000000:
         network.send_on_next_update(p)
