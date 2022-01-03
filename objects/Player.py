@@ -26,8 +26,8 @@ class Player(GameObject):
         self.pitch = 0
         self.yaw = 0
 
-        self.mouse_x = SCREEN_WIDTH / 2
-        self.mouse_y = SCREEN_HEIGHT / 2
+        self.mouse_x = G_SCREEN_WIDTH / 2
+        self.mouse_y = G_SCREEN_HEIGHT / 2
 
         self.W_key_down = False
         self.S_key_down = False
@@ -224,7 +224,7 @@ class Player(GameObject):
     """
     def _mouse_controller(self, delta_time):
         if pygame.mouse.get_focused():
-            pygame.mouse.set_pos((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+            pygame.mouse.set_pos((G_SCREEN_WIDTH/2, G_SCREEN_HEIGHT/2))
 
             mouse_pos = pygame.mouse.get_pos()
             mouse_x = mouse_pos[0]
@@ -254,7 +254,7 @@ class Player(GameObject):
             self.camera.turn(last_yaw - self.yaw)
 
             if self.first_mouse:
-                pygame.mouse.set_pos(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+                pygame.mouse.set_pos(G_SCREEN_WIDTH/2, G_SCREEN_HEIGHT/2)
                 self.camera.look(self.camera.position, Vector(0, 1, 0), Vector(0, 1, 0))
                 self.pitch = 0
                 self.yaw = 0

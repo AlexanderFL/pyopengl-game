@@ -28,16 +28,20 @@ from objects.Enemy import Enemy
 
 from objects.meshes.ObjLoader import load_obj_file
 
+from misc.Config import Config
+
 class StartGame:
     def __init__(self):
         self.is_networking = True
 
+        config = Config()
+
         pygame.init()
-        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.OPENGL|pygame.DOUBLEBUF)
+        pygame.display.set_mode((G_SCREEN_WIDTH, G_SCREEN_HEIGHT), pygame.OPENGL|pygame.DOUBLEBUF)
         pygame.mouse.set_visible(False)
 
         if self.is_networking:
-            self.server = Networking('127.0.0.1', 7532)
+            self.server = Networking(config.server_ip, config.server_port)
             if self.server.connect() == -1:
                 self.is_networking = False
         
@@ -164,7 +168,7 @@ class StartGame:
 
     def display(self):
         # Make sure that the projection is in perspective
-        self.player.camera.projection_matrix.set_perspective(3.14159/2, SCREEN_WIDTH/SCREEN_HEIGHT, 0.001, 100)
+        self.player.camera.projection_matrix.set_perspective(3.14159/2, G_SCREEN_WIDTH/G_SCREEN_HEIGHT, 0.001, 100)
         if self.is_networking:
             glClearColor(66/255, 135/255, 245/255, 1.0)
         else:
@@ -172,14 +176,14 @@ class StartGame:
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_DEPTH_CLAMP)
-        glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+        glViewport(0, 0, G_SCREEN_WIDTH, G_SCREEN_HEIGHT)
         
         # Draw all objects within game_objects
         self.game_objects.draw_objects(self.modelMatrix, self.shader, True)
 
         # Draw the crosshair (small dot) that stays in the center of the screen
         # Requires that the camera is set to orthographic
-        self.player.camera.projection_matrix.set_orthographic(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT, 0.01, 10)
+        self.player.camera.projection_matrix.set_orthographic(0, G_SCREEN_WIDTH, 0, G_SCREEN_HEIGHT, 0.01, 10)
         self.crosshair.draw()
         
         pygame.display.flip()
