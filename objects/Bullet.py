@@ -7,16 +7,19 @@ from objects.primatives.SpherePrimative import SpherePrimative
 from .GameObjectBase import GameObject
 from maths.Material import Material
 from builtins import staticmethod
+import shortuuid
 
 class Bullet(GameObject):
-    def __init__(self, shader, position=Point(1, 1, 1), direction=Vector(1, 0, 0)):
+    def __init__(self, shader, position=Point(1, 1, 1), direction=Vector(1, 0, 0), network_test=False):
         bullet_material = Material(Color(1, 0, 0), Color(1, 0, 0), 1)
         super().__init__(shader, position, Vector(0,0,0), Vector(0.1, 0.1, 0.1), bullet_material)
         self.direction = direction
         
         self.speed = 10
-        self.sphere = SpherePrimative()
+        if not network_test:
+            self.sphere = SpherePrimative()
         self.collision_resize = 1
+        self.network_uid = shortuuid.uuid()
     
     def update(self, delta_time, game_objects):
         self.position += self.direction * delta_time * self.speed
@@ -35,22 +38,25 @@ class Bullet(GameObject):
     def draw(self, modelMatrix):
         self._draw(modelMatrix, self.sphere)
     
-    def serialize(self):
+    def to_dict(self):
         bullet_dict = {
-            'direction':
-            {
-                'x': self.direction.x,
-                'y': self.direction.y,
-                'z': self.direction.z
-            },
-            'position':
-            {
-                'x': self.position.x,
-                'y': self.position.y,
-                'z': self.position.z
+            'uid': self.network_uid,
+            'data': {
+                'direction':
+                {
+                    'x': self.direction.x,
+                    'y': self.direction.y,
+                    'z': self.direction.z
+                },
+                'position':
+                {
+                    'x': self.position.x,
+                    'y': self.position.y,
+                    'z': self.position.z
+                }
             }
         }
-        return json.dumps(bullet_dict)
+        return bullet_dict
     
     @staticmethod
     def deserialize(json_obj):

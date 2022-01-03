@@ -1,7 +1,7 @@
-from common_game_maths.Vector import Vector
+from maths.Vector import Vector
 from maths.Matricies import ViewMatrix
 from maths.Matricies import ProjectionMatrix
-from common_game_maths.Point import Point
+from maths.Point import Point
 from CONSTANTS import *
 
 class Camera:

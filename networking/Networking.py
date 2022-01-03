@@ -1,12 +1,18 @@
+if __name__ == "__main__":
+    import os, sys
+    sys.path.insert(0, os.getcwd())
+
 from json.decoder import JSONDecodeError
 import socket
 import json
+from maths.Vector import Vector
 from objects.Player import Player
 from objects.Bullet import Bullet
+from maths.Point import Point
 from time import time
 
 class Networking:
-    def __init__(self, ip, port):
+    def __init__(self, ip, port=7532):
         self.ip = ip
         self.port = port
         self.connected = False
@@ -23,7 +29,7 @@ class Networking:
     def connect(self):
         try:
             self.socket.connect((self.ip, self.port))
-            self.socket.setblocking(0)
+            # self.socket.setblocking(0)
         except TimeoutError as timeout:
             print(timeout.strerror)
             return -1
@@ -42,38 +48,38 @@ class Networking:
         if object not in self.buffer:
             self.buffer.append(object)
     
-    async def update(self):
+    def update(self):
         # Update the server 240 times per second
         current_time = time()
         data = None
         if current_time > self.timer + self.server_counter / float(self.server_rate):
+            print("Sending data")
             for object in self.buffer:
                 if type(object) == Player:
-                    object_ser = self.serialize_player_data(object)
+                    object_ser = object.serialize() #
                     self.send(object_ser)
                 elif type(object) == Bullet:
                     object_ser = self.serialize_bullet_data(object)
                     self.send(object_ser)
             self.buffer.clear()
 
-            data = self.recv()
+            #data = self.recv()
             self.server_counter += 1
         if self.server_counter > self.server_rate - 1:
             self.timer = time()
             self.server_counter = 0
-        
         return data
 
     def serialize_player_data(self, player_data : Player):
         if type(player_data) == Player:
             new_dict = { 
-                "player": player_data.get_dict()
+                "player": player_data.serialize()
             }
             return json.dumps(new_dict)
     
     def serialize_bullet_data(self, bullet_data : Bullet):
         new_dict = {
-            "bullet": bullet_data.get_dict()
+            "bullet": bullet_data.serialize()
         }
         return json.dumps(new_dict)
         
@@ -100,8 +106,54 @@ class Networking:
     
     def send(self, data:str):
         try:
-            self.socket.sendall(bytes(str(data), encoding="utf-8"))
+            self.socket.sendall(bytes(data, encoding="utf-8"))
             return 1
         except Exception as e:
             print(e.with_traceback)
             return -1
+    
+    def do_initial_exchange(self):
+        attempts = 0
+        while attempts <= 500:
+            results, _ = self.socket.recvfrom(2048)
+            if results:
+                load_results = json.loads(results)
+                try:
+                    uid = load_results["init"]
+                    self.socket.sendall(results)
+                    # TODO: More verification needed
+                    # Need to be sure that I recieved the correct uid and no bit flipping has occured
+                    return uid
+                except KeyError:
+                    pass
+            attempts += 1
+        return None
+
+if __name__ == "__main__":
+    class S:
+        def get_projection_matrix(self):
+            return None
+        def set_projection_matrix(self, arg):
+            return None
+    network = Networking("127.0.0.1")
+    if network.connect() != 1:
+        print("Connection failed")
+        exit()
+
+    p = Player(S(), Point(1, 1, 1))
+    b1 = Bullet(S(), Point(2, 1, 1), Vector(1, 0, 0), True)
+    b2 = Bullet(S(), Point(4, 1, 4), Vector(1, 0, 1), True)
+
+    p.owned_bullets.append(b1)
+    p.owned_bullets.append(b2)
+
+    init = network.do_initial_exchange()
+    if init == None:
+        exit()
+    p.network_uid = init
+
+    c = 0
+    while c <= 60000000:
+        network.send_on_next_update(p)
+        network.update()
+        c += 1

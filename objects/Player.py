@@ -40,6 +40,7 @@ class Player(GameObject):
 
         self.firing = False
         self.network = network
+        self.network_uid = None # Will recieve from the server on connection
 
         self.dead = False
         self.death_positions = {"position": Point(15, 5, 0), "lookat": Point(0, 1, 0)}
@@ -258,14 +259,23 @@ class Player(GameObject):
                 self.pitch = 0
                 self.yaw = 0
                 self.first_mouse = False
+        else:
+            print("no mouse detected")
     
     def serialize(self):
+        bullet_list = []
+        for bullet in self.owned_bullets:
+            bullet_list.append(bullet.to_dict())
         player_dict = {
-            "position": {
-                "x": self.position.x,
-                "y": self.position.y,
-                "z": self.position.z
-            },
-            "dead": self.dead
+            "uid": self.network_uid,
+            "data": {
+                "position": {
+                    "x": self.position.x,
+                    "y": self.position.y,
+                    "z": self.position.z
+                },
+                "dead": self.dead,
+                "bullets": bullet_list,
+            }
         }
         return json.dumps(player_dict)

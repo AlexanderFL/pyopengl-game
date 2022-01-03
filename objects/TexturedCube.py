@@ -4,7 +4,7 @@ from maths.Matricies import ModelMatrix
 from maths.Vector import Vector
 from objects.primatives.CubePrimative import CubePrimative
 from objects.GameObjectBase import GameObject
-from common_game_maths.Point import Point
+from maths.Point import Point
 from math import sqrt, pow
 from maths.Material import Material
 import pygame

@@ -2,8 +2,8 @@ from OpenGL.GL import *
 from objects.meshes.MeshModel import MeshModel
 from maths.Color import Color
 from maths.Material import Material
-from common_game_maths.Point import Point
-from common_game_maths.Vector import Vector
+from maths.Point import Point
+from maths.Vector import Vector
 import pygame
 from maths.Point import Point2D
 

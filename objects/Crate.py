@@ -1,5 +1,3 @@
-from common_game_maths.Vector import Vector
-
 from maths.Material import Material
 from .GameObjectBase import GameObject
 from .meshes.ObjLoader import load_obj_file
