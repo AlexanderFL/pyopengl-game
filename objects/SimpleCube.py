@@ -1,12 +1,6 @@
 from OpenGL.GL import *
-from maths.Matricies import ModelMatrix
-from maths.Vector import Vector
 from objects.primatives.CubePrimative import CubePrimative
 from objects.GameObjectBase import GameObject
-from maths.Point import Point
-from math import sqrt, pow
-import pygame
-import sys
 
 class SimpleCube(GameObject):
     """

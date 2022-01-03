@@ -1,10 +1,7 @@
-from OpenGL import GL
-from pygame.math import Vector3
 from CONSTANTS import *
 
 import pygame
 from pygame.locals import *
-from time import time
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -21,12 +18,10 @@ from maths.Matricies import *
 from objects.GameObjects import GameObjects
 from objects.Floor import Floor
 from objects.Player import Player
-from objects.TexturedCube import TexturedCube
 from objects.primatives.Crosshair import Crosshair
 from typing import List
 
 from networking.Networking import Networking
-import asyncio
 import sys
 
 from objects.Enemy import Enemy

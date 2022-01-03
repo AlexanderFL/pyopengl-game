@@ -1,7 +1,6 @@
 import json
 from maths.Point import Point
 from maths.Vector import Vector
-from numpy.lib.function_base import delete
 from maths.Color import Color
 from objects.primatives.SpherePrimative import SpherePrimative
 from .GameObjectBase import GameObject

@@ -1,7 +1,6 @@
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-from shaders.Shaders import Shader3D
 import numpy
 
 class CubePrimative:

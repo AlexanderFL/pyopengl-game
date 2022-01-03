@@ -1,5 +1,3 @@
-
-from math import pi
 from maths.Vector import Vector
 from maths.Point import Point
 

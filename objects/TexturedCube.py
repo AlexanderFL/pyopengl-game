@@ -1,11 +1,8 @@
 from OpenGL.GL import *
 from maths.Color import Color
 from maths.Matricies import ModelMatrix
-from maths.Vector import Vector
 from objects.primatives.CubePrimative import CubePrimative
 from objects.GameObjectBase import GameObject
-from maths.Point import Point
-from math import sqrt, pow
 from maths.Material import Material
 import pygame
 import sys

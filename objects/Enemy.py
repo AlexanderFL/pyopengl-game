@@ -1,10 +1,7 @@
 import json
-from pygame import Vector3
 from objects.GameObjectBase import GameObject
-from maths.Point import Point
 from maths.Vector import Vector
 from objects.GameObjects import GameObjects
-from objects.Player import Player
 from .meshes.ObjLoader import load_obj_file
 from typing import List
 from .Bullet import Bullet
