@@ -51,6 +51,8 @@ class GameObject:
     def collision(self, object : GameObject) -> GameObject:
         """
         Generic AABB collision for every game object, override this function if different collision is needed
+
+        @param 'object' - the other game object that is being tested for collision
         """
         self.collision_side = [0, 0, 0, 0]
         p_x = object.position.x
@@ -82,6 +84,9 @@ class GameObject:
     def _draw(self, modelMatrix : ModelMatrix, primative) -> GameObject:
         """
         Generic draw call that works for most objects, needs to be overwritten if textures are added
+
+        @param 'modelMatrix' - the model matrix that will be used
+        @param 'primative' - a primative object that uses OpenGL calls for drawing
         """
         if self.visible:
             modelMatrix.load_identity()
@@ -105,6 +110,9 @@ class GameObject:
     def update(self, delta_time, game_objects) -> None:
         """
         update() can differ greatly between objects
+
+        @param 'delta_time' - time difference between the previous and current frame
+        @param 'game_objects' - the object that handles all of the game objects
         """
         return None
     
