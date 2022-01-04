@@ -2,13 +2,16 @@
 from math import pi, cos, sin
 from OpenGL.GL import *
 
-"""
-    Simple crosshair dot that stays in the center of the screen,
-    color is set in the shader provided, and uses alpha channel to make
-    the dot slightly transparent
-"""
 class Crosshair:
+    """
+        Simple crosshair dot that stays in the center of the screen,
+        color is set in the shader provided, and uses alpha channel to make
+        the dot slightly transparent
+    """
     def __init__(self, shader):
+        """
+        @param 'shader' - The shader program
+        """
         self.samples = 21
         self.position_array = [0, 0]
         self.shader = shader
@@ -21,6 +24,9 @@ class Crosshair:
             self.position_array.append(y)
 
     def draw(self):
+        """
+            Draws the crosshair using OpenGL calls
+        """
         self.shader.use()
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)

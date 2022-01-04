@@ -56,8 +56,3 @@ class Bullet(GameObject):
             }
         }
         return bullet_dict
-    
-    @staticmethod
-    def deserialize(json_obj):
-        bullet_dict = json.loads(json_obj)
-        return bullet_dict

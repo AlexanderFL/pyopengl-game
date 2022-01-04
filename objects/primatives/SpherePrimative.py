@@ -5,6 +5,9 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 import numpy
 
 class SpherePrimative:
+    """
+    SpherePrimative creates and binds the OpenGL buffers needed to draw object into the scene
+    """
     def __init__(self, stacks = 12, slices = 12):
         self.slices = slices
         self.vertex_count = 0
@@ -36,6 +39,11 @@ class SpherePrimative:
         glBindBuffer(GL_ARRAY_BUFFER, 0)
 
     def draw(self, shader):
+        """
+        draw() sets the buffers in the shader file and draws the sphere
+
+        @param 'shader' - The shader program to use
+        """
         shader.set_attribute_buffers(self.vertex_buffer_id)
         for i in range(0, self.vertex_count, (self.slices + 1) * 2):
             glDrawArrays(GL_TRIANGLE_STRIP, i, (self.slices + 1) * 2)

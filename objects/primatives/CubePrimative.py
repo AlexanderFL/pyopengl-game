@@ -4,7 +4,13 @@ from OpenGL.GLU import *
 import numpy
 
 class CubePrimative:
+    """
+    CubePrimative creates and binds the OpenGL buffers needed to draw object into the scene
+    """
     def __init__(self, has_uv=True):
+        """
+        @param 'has_uv' - If the cube should have uv coordinates for texturing
+        """
         self.has_uv = has_uv
         cube_array = [
             #position           normals             uv
@@ -80,6 +86,11 @@ class CubePrimative:
 
     # Draw fuction for a primitive cube object
     def draw(self, shader):
+        """
+        draw() sets the buffers in the shader file and draws the sphere
+
+        @param 'shader' - The shader program to use
+        """
         if self.has_uv:
             shader.set_attrib_buffers_tex(self.vertex_buffer_id)
         else:
