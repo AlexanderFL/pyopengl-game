@@ -37,7 +37,7 @@ void main(void)
     }
     
     // Go through each light in the scene
-    vec4 results = 0;
+    vec4 results = vec4(0, 0, 0, 0);
     for(int i = 0; i < NR_OF_LIGHTS; i++){
         results += calculateLighting(lights[i], mat_diffuse, i);
     }
