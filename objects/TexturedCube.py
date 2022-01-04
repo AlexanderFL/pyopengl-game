@@ -1,15 +1,16 @@
-from OpenGL.GL import *
-from maths.Color import Color
-from maths.Matricies import ModelMatrix
-from objects.primatives.CubePrimative import CubePrimative
-from objects.GameObjectBase import GameObject
-from maths.Material import Material
-import pygame
 import sys
+import pygame
+from OpenGL.GL import *
+
+from maths.Color import Color
+from maths.Material import Material
+from maths.Matricies import ModelMatrix
+from objects.GameObjectBase import GameObject
+from objects.primatives.CubePrimative import CubePrimative
 
 class TexturedCube(GameObject):
     """
-        A single cube gameobject that has collision
+        A cube that has image textururing on it
     """
     def __init__(self, shader, position, rotation, scale, material=Material(Color(1, 1, 1), Color(.05, .05, .05), 250), visible=True, texture_path=None):
         super().__init__(shader, position, rotation, scale, material, visible)

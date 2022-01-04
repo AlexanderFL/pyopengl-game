@@ -1,12 +1,13 @@
 
-from maths.Color import Color
-from objects.GameObjectBase import GameObject
-from objects.TexturedCube import CubePrimative
-from shaders.Shaders import Shader3D
-
+import sys
 import pygame
 from OpenGL.GL import *
-import sys
+
+from maths.Color import Color
+from shaders.Shaders import Shader3D
+from objects.GameObjectBase import GameObject
+from objects.TexturedCube import CubePrimative
+
 
 class Floor(GameObject):
     """

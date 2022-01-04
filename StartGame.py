@@ -111,8 +111,6 @@ class StartGame:
         self.fr_sum += delta_time
         self.fr_ticker += 1
         if self.fr_sum > 1.0:
-            #b = Bullet(self.shader, position=Point(8, 0, 8), direction=Vector3(1, 0, 0))
-            #self.game_objects.add_object(b)
             # print(self.fr_ticker / self.fr_sum)
             self.fr_sum = 0
             self.fr_ticker = 0
@@ -140,6 +138,7 @@ class StartGame:
                                     enemy.set_position(enemy_pos)
                                     enemy.rotation = enemy_rot
                                     enemy.visible = not item["data"]["dead"]
+                                    enemy.disable_collision = item["data"]["dead"]
                                     bullet_l = item["data"]["bullets"]
                                     for b in bullet_l:
                                         bullet_pos = b["data"]["position"]

@@ -1,17 +1,14 @@
 from maths.Vector import Vector
 from maths.Point import Point
 
-from objects.GameObjectBase import GameObject
 import sys
+from objects.GameObjectBase import GameObject
 
-if __name__ == "__main__":
-    from .TexturedCube import TexturedCube
-else:
-    from objects.TexturedCube import TexturedCube
-    from .SimpleCube import SimpleCube
-    from maths.Material import Material
-    from maths.Color import Color
-    from .Crate import Crate
+from .Crate import Crate
+from maths.Color import Color
+from .SimpleCube import SimpleCube
+from maths.Material import Material
+from objects.TexturedCube import TexturedCube
 
 class Level1(GameObject):
     """

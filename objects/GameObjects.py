@@ -1,5 +1,5 @@
-from objects.GameObjectBase import GameObject
 from typing import List
+from objects.GameObjectBase import GameObject
 
 class GameObjects:
     """

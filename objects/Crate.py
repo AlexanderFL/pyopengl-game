@@ -1,7 +1,7 @@
+import sys
 from maths.Material import Material
 from .GameObjectBase import GameObject
 from .meshes.ObjLoader import load_obj_file
-import sys
 
 class Crate(GameObject):
     def __init__(self, shader, position, rotation, scale, material=Material(), visible=True) -> None:

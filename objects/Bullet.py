@@ -1,12 +1,11 @@
-import json
-from maths.Point import Point
-from maths.Vector import Vector
-from maths.Color import Color
-from objects.primatives.SpherePrimative import SpherePrimative
-from .GameObjectBase import GameObject
-from maths.Material import Material
-from builtins import staticmethod
 import shortuuid
+
+from maths.Point import Point
+from maths.Color import Color
+from maths.Vector import Vector
+from maths.Material import Material
+from .GameObjectBase import GameObject
+from objects.primatives.SpherePrimative import SpherePrimative
 
 class Bullet(GameObject):
     def __init__(self, shader, position=Point(1, 1, 1), direction=Vector(1, 0, 0), network_test=False):

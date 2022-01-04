@@ -1,8 +1,8 @@
+from CONSTANTS import *
+from maths.Point import Point
 from maths.Vector import Vector
 from maths.Matricies import ViewMatrix
 from maths.Matricies import ProjectionMatrix
-from maths.Point import Point
-from CONSTANTS import *
 
 class Camera:
     def __init__(self, shader, position = Point(0, 0, 0)):

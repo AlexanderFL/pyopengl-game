@@ -1,11 +1,11 @@
-import json
-from objects.GameObjectBase import GameObject
+import sys
+from typing import List
+
+from .Bullet import Bullet
 from maths.Vector import Vector
+from objects.GameObjectBase import GameObject
 from objects.GameObjects import GameObjects
 from .meshes.ObjLoader import load_obj_file
-from typing import List
-from .Bullet import Bullet
-import sys
 
 class Enemy(GameObject):
     """

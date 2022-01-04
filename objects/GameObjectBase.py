@@ -1,9 +1,11 @@
 from __future__ import annotations
+from sys import flags
+
 from maths.Point import Point
 from maths.Vector import Vector
-from shaders.Shaders import Shader3D
 from maths.Material import Material
 from maths.Matricies import ModelMatrix
+from shaders.Shaders import Shader3D
 
 class GameObject:
     """
@@ -47,6 +49,7 @@ class GameObject:
         self.collision_resize = 2
 
         self.destroy = False
+        self.disable_collision = False
     
     def collision(self, object : GameObject) -> GameObject:
         """
@@ -54,32 +57,33 @@ class GameObject:
 
         @param 'object' - the other game object that is being tested for collision
         """
-        self.collision_side = [0, 0, 0, 0]
-        p_x = object.position.x
-        p_z = object.position.z
+        if not self.disable_collision:
+            self.collision_side = [0, 0, 0, 0]
+            p_x = object.position.x
+            p_z = object.position.z
 
-        x1 = self.position.x + (self.scale.x / self.collision_resize + 0.2)
-        x2 = self.position.x - (self.scale.x / self.collision_resize + 0.2)
+            x1 = self.position.x + (self.scale.x / self.collision_resize + 0.2)
+            x2 = self.position.x - (self.scale.x / self.collision_resize + 0.2)
 
-        z1 = self.position.z + (self.scale.z / self.collision_resize + 0.2)
-        z2 = self.position.z - (self.scale.z / self.collision_resize + 0.2)
+            z1 = self.position.z + (self.scale.z / self.collision_resize + 0.2)
+            z2 = self.position.z - (self.scale.z / self.collision_resize + 0.2)
 
-        if p_x <= x1 and p_x >= x2 and p_z <= z1 and p_z >= z2:
-            x_h1 = abs(p_x - x1)
-            x_h2 = abs(p_x - x2)
-            z_h1 = abs(p_z - z1)
-            z_h2 = abs(p_z - z2)
+            if p_x <= x1 and p_x >= x2 and p_z <= z1 and p_z >= z2:
+                x_h1 = abs(p_x - x1)
+                x_h2 = abs(p_x - x2)
+                z_h1 = abs(p_z - z1)
+                z_h2 = abs(p_z - z2)
 
-            if x_h1 < x_h2 and x_h1 < z_h1 and x_h1 < z_h2:
-                self.collision_side[0] = 1
-            elif x_h2 < x_h1 and x_h2 < z_h1 and x_h2 < z_h2:
-                self.collision_side[1] = 1
-            elif z_h1 < x_h1 and z_h1 < x_h2 and z_h1 < z_h2:
-                self.collision_side[2] = 1
-            elif z_h2 < x_h1 and z_h2 < x_h2 and z_h2 < z_h1:
-                self.collision_side[3] = 1
-            return self
-        return None
+                if x_h1 < x_h2 and x_h1 < z_h1 and x_h1 < z_h2:
+                    self.collision_side[0] = 1
+                elif x_h2 < x_h1 and x_h2 < z_h1 and x_h2 < z_h2:
+                    self.collision_side[1] = 1
+                elif z_h1 < x_h1 and z_h1 < x_h2 and z_h1 < z_h2:
+                    self.collision_side[2] = 1
+                elif z_h2 < x_h1 and z_h2 < x_h2 and z_h2 < z_h1:
+                    self.collision_side[3] = 1
+                return self
+            return None
     
     def _draw(self, modelMatrix : ModelMatrix, primative) -> GameObject:
         """

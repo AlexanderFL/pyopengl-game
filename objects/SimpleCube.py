@@ -1,6 +1,6 @@
 from OpenGL.GL import *
-from objects.primatives.CubePrimative import CubePrimative
 from objects.GameObjectBase import GameObject
+from objects.primatives.CubePrimative import CubePrimative
 
 class SimpleCube(GameObject):
     """
