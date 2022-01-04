@@ -89,9 +89,9 @@ class GameObject:
             modelMatrix.push_matrix()
 
             modelMatrix.add_translation(self.position.x, self.position.y, self.position.z)
-            modelMatrix.add_rotate_x(self.rotation.x)
-            modelMatrix.add_rotate_y(self.rotation.y)
-            modelMatrix.add_rotate_z(self.rotation.z)
+            modelMatrix.add_rotate_x(self.rotation.x * 3.1415/180)
+            modelMatrix.add_rotate_y(self.rotation.y * 3.1415/180)
+            modelMatrix.add_rotate_z(self.rotation.z * 3.1415/180)
             modelMatrix.add_scale(self.scale.x, self.scale.y, self.scale.z)
 
             self.shader.use()

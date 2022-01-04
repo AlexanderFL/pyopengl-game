@@ -86,7 +86,7 @@ class StartGame:
     def initializeGameObjects(self):
         self.level1 = Level1(self.shader, Point(-10, 0, -10))
         self.floor = Floor(self.shader, Point(0, -0.5, 0), Vector(0,0,0), Vector(20, 0.1, 20), Material())
-        self.enemy = Enemy(self.shader, Point(8, -0.15, 7), Vector(0, 0, 0), Vector(1, 1, 1), Material())
+        # self.enemy = Enemy(self.shader, Point(8, -0.15, 7), Vector(0, 0, 0), Vector(1, 1, 1), Material())
 
         if self.is_networking:
             init = self.server.do_initial_exchange()
@@ -133,8 +133,11 @@ class StartGame:
                                     # Update the existing player info
                                     item_in = True
                                     obj_position = item["data"]["position"]
+                                    obj_rotation = item["data"]["rotation"]
                                     enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
+                                    enemy_rot = Vector(obj_rotation["x"], obj_rotation["y"], obj_rotation["z"])
                                     enemy.set_position(enemy_pos)
+                                    enemy.rotation = enemy_rot
                                     enemy.visible = not item["data"]["dead"]
                                     bullet_l = item["data"]["bullets"]
                                     for b in bullet_l:
@@ -148,8 +151,10 @@ class StartGame:
                             if not item_in:
                                 # Spawn a new player
                                 obj_position = item["data"]["position"]
+                                obj_rotation = item["data"]["rotation"]
                                 enemy_pos = Point(obj_position["x"], obj_position["y"], obj_position["z"])
-                                new_enemy = Enemy(self.shader, enemy_pos, Vector(0, 1, 0), Vector(1, 1, 1), Material())
+                                enemy_rot = Vector(obj_rotation["x"], obj_rotation["y"], obj_rotation["z"])
+                                new_enemy = Enemy(self.shader, enemy_pos, enemy_rot, Vector(1, 1, 1), Material())
                                 new_enemy.network_uid = item["uid"]
                                 self.enemy_list.append(new_enemy)
                                 self.game_objects.add_object(new_enemy)                

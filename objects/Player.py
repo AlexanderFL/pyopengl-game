@@ -24,7 +24,9 @@ class Player(GameObject):
         self.camera = Camera(shader, position)
         self.first_mouse = True
         self.pitch = 0
-        self.yaw = 0
+        self.yaw = 45
+
+        self.rotation = Vector(0, 0, 0)
 
         self.mouse_x = G_SCREEN_WIDTH / 2
         self.mouse_y = G_SCREEN_HEIGHT / 2
@@ -117,14 +119,29 @@ class Player(GameObject):
                 self.respawn_point_picked = False
                 self.time = 0
                 self.first_mouse = True
+
+                if self.position.x == -9 and self.position.z == -9:
+                    self.yaw = 45
+                    print("Setting yaw to 45")
+                elif self.position.x == 9 and self.position.z == -9:
+                    self.yaw = 315
+                    print("Setting yaw to 315")
+                elif self.position.x == -9 and self.position.z == 9:
+                    self.yaw = 135
+                    print("Setting yaw to 135")
+                elif self.position.x == 9 and self.position.z == 9:
+                    self.yaw = 225
+                    print("Setting yaw to 225")
         else:
             # Player is alive and can play normally
-            self._mouse_controller(delta_time)
-            self._keyboard_controller()
-
+            self.rotation.y = -self.yaw
             self.move(delta_time)
             self.prev_position = self.position
             self.position = self.camera.viewMatrix.eye
+
+            self._mouse_controller(delta_time)
+            self._keyboard_controller()
+
             collision_objects = game_objects.check_collision(self)
 
             if collision_objects != []:
@@ -245,10 +262,10 @@ class Player(GameObject):
             if self.pitch >= 89:
                 self.pitch = 89
 
-            if self.yaw >= 360:
+            if self.yaw > 360:
                 self.yaw = 0
-            if self.yaw <= -360:
-                self.yaw = 0
+            if self.yaw < 0:
+                self.yaw = 360
             
             self.camera.pitch(self.pitch - last_pitch)
             self.camera.turn(last_yaw - self.yaw)
@@ -257,10 +274,22 @@ class Player(GameObject):
                 pygame.mouse.set_pos(G_SCREEN_WIDTH/2, G_SCREEN_HEIGHT/2)
                 self.camera.look(self.camera.position, Vector(0, 1, 0), Vector(0, 1, 0))
                 self.pitch = 0
-                self.yaw = 0
                 self.first_mouse = False
+
+                if self.position.x == -9 and self.position.z == -9:
+                    self.yaw = 45
+                    print("Setting yaw to 45")
+                elif self.position.x == 9 and self.position.z == -9:
+                    self.yaw = 135
+                    print("Setting yaw to 315")
+                elif self.position.x == -9 and self.position.z == 9:
+                    self.yaw = 315
+                    print("Setting yaw to 135")
+                elif self.position.x == 9 and self.position.z == 9:
+                    self.yaw = 225
+                    print("Setting yaw to 225")
         else:
-            print("no mouse detected")
+            pass
     
     def serialize(self):
         bullet_list = []
@@ -273,6 +302,11 @@ class Player(GameObject):
                     "x": self.position.x,
                     "y": self.position.y,
                     "z": self.position.z
+                },
+                "rotation": {
+                    "x": self.rotation.x,
+                    "y": self.rotation.y,
+                    "z": self.rotation.z,
                 },
                 "dead": self.dead,
                 "bullets": bullet_list,
