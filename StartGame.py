@@ -1,34 +1,29 @@
-from numpy import empty
-from CONSTANTS import *
-
+import sys
 import pygame
-from pygame.locals import *
-
+from typing import List
 from OpenGL.GL import *
 from OpenGL.GLU import *
+from pygame.locals import *
+
+from maths.Matricies import *
 from maths.Lights import LightSource
 from maths.Color import Color
 from maths.Material import Material
-from objects.Bullet import Bullet
-from objects.Level1 import Level1
 
 from shaders.Shaders import Shader3D
 from shaders.Crosshair import ShaderCrosshair
-from maths.Matricies import *
 
-from objects.GameObjects import GameObjects
 from objects.Floor import Floor
-from objects.Player import Player
-from objects.primatives.Crosshair import Crosshair
-from typing import List
-
-from networking.Networking import Networking
-import sys
-
 from objects.Enemy import Enemy
-
+from objects.Bullet import Bullet
+from objects.Level1 import Level1
+from objects.Player import Player
+from objects.GameObjects import GameObjects
 from objects.meshes.ObjLoader import load_obj_file
+from objects.primatives.Crosshair import Crosshair
 
+from CONSTANTS import *
+from networking.Networking import Networking
 from misc.Config import Config
 
 class StartGame:
