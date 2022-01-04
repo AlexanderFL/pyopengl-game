@@ -22,6 +22,9 @@ class Enemy(GameObject):
         self.network_uid = None
     
     def add_to_owned_bullets(self, bullet_obj : Bullet, game_objects : GameObjects):
+        """
+        add_to_owned_bullets() will add a new and only new bullet, to the list of owned bullets.
+        """
         bullet_exists = False
         for bullet in self.owned_bullets:
             if bullet.network_uid == bullet_obj.network_uid:
@@ -40,11 +43,3 @@ class Enemy(GameObject):
     
     def draw(self, modelMatrix) -> GameObject:
         self._draw(modelMatrix, self.model)
-    
-    def deserialize(self, p_json):
-        p_dict = json.loads(p_json)
-        position = p_dict["position"]
-        visible = not p_dict["dead"]
-        
-        self.position = Vector(position["x"], position["y"], position["z"])
-        self.visible = visible

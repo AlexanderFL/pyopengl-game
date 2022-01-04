@@ -46,6 +46,7 @@ class Player(GameObject):
 
         # Will recieve from the server on connection
         self.network_uid = None
+        self.connected = True
 
         # Bullets that the player shoots, so that he doesn't collide with his own bullets at the start
         self.owned_bullets = []
@@ -318,6 +319,7 @@ class Player(GameObject):
                     "z": self.rotation.z,
                 },
                 "dead": self.dead,
+                "disconnecting": not self.connected,
                 "bullets": bullet_list,
             }
         }

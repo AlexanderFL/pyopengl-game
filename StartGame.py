@@ -1,3 +1,4 @@
+from numpy import empty
 from CONSTANTS import *
 
 import pygame
@@ -81,6 +82,7 @@ class StartGame:
         self.fr_sum = 0
 
         self.network_sum = 0
+        self.network_cleanup_sum = 0
         self.enemy_list : List[Enemy] = []
 
     def initializeGameObjects(self):
@@ -117,6 +119,7 @@ class StartGame:
 
         if self.is_networking:
             self.network_sum += delta_time
+            self.network_cleanup_sum += delta_time
             if self.network_sum > 1.0/120:
                 # Networking code that handles spawning in new players when they connect
                 # as well as updating their position etc.
@@ -155,8 +158,26 @@ class StartGame:
                                 new_enemy = Enemy(self.shader, enemy_pos, enemy_rot, Vector(1, 1, 1), Material())
                                 new_enemy.network_uid = item["uid"]
                                 self.enemy_list.append(new_enemy)
-                                self.game_objects.add_object(new_enemy)                
+                                self.game_objects.add_object(new_enemy)
 
+                    if self.network_cleanup_sum > 2.0:
+                        # Cleanup roughly every 2 seconds, mainly players that have disconnected
+                        notfound = []
+                        found = []
+                        for enemy in self.enemy_list:
+                            for item in data:
+                                if item["uid"] == enemy.network_uid:
+                                    found.append(enemy)
+                                    if enemy in notfound:
+                                        notfound.remove(enemy)
+                                else:
+                                    if enemy not in found:
+                                        if enemy not in notfound:
+                                            notfound.append(enemy)
+                        if notfound != []:
+                            self.game_objects.remove_object(notfound[0])
+                            self.enemy_list.remove(notfound[0])
+                        self.network_cleanup_sum = 0
                 self.network_sum = 0
 
         # Update all objects in the scene, including the player
@@ -193,11 +214,12 @@ class StartGame:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     print("QUITTING")
-                    self.server.send("disconnect")
+                    self.player.connected = False
                     exiting = True
                 elif event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
                         print("ESCAPING")
+                        self.player.connected = False
                         exiting = True
                     if event.key == K_x:
                         black = Color(0, 0, 0, 1)

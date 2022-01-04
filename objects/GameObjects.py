@@ -14,7 +14,10 @@ class GameObjects:
     
     def remove_object(self, object) -> None:
         # Remove object from the scene
-        self.game_objects.remove(object)
+        try:
+            self.game_objects.remove(object)
+        except ValueError:
+            pass
     
     def draw_objects(self, modelMatrix, shader, update_shader=False) -> None:
         # Draw all of the objects
@@ -53,3 +56,6 @@ class GameObjects:
                 else:
                     collision_objects.append(colliding_object)
         return collision_objects
+    
+    def __str__(self) -> str:
+        return "%s" % self.game_objects
