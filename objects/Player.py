@@ -18,7 +18,7 @@ class Player(GameObject):
     'Player' is a big class that handles all of the player interaction with the game,
     movement, shooting, looking around and collision logic
     """
-    def __init__(self, shader, position=Point(0,0,0)) -> None:
+    def __init__(self, shader, position=Point(0,0,0), sensitivity=20) -> None:
         super().__init__(shader, position, Vector(0,0,0), Vector(0,0,0), Material())
 
         # Camera object
@@ -37,7 +37,7 @@ class Player(GameObject):
         self.A_key_down = False
         self.D_key_down = False
         self.sprint_key_down = False
-        self.sensitivity = 20
+        self.sensitivity = sensitivity
         self.speed = 2
         self.firing = False
         self.velocity = Vector(0, 0, 0)

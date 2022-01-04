@@ -34,14 +34,14 @@ class StartGame:
     def __init__(self):
         self.is_networking = True
 
-        config = Config()
+        self.config = Config()
 
         pygame.init()
         pygame.display.set_mode((G_SCREEN_WIDTH, G_SCREEN_HEIGHT), pygame.OPENGL|pygame.DOUBLEBUF)
         pygame.mouse.set_visible(False)
 
         if self.is_networking:
-            self.server = Networking(config.server_ip, config.server_port)
+            self.server = Networking(self.config.server_ip, self.config.server_port)
             if self.server.connect() == -1:
                 self.is_networking = False
         
@@ -88,7 +88,7 @@ class StartGame:
         self.floor = Floor(self.shader, Point(0, -0.5, 0), Vector(0,0,0), Vector(20, 0.1, 20), Material())
         # self.enemy = Enemy(self.shader, Point(8, -0.15, 7), Vector(0, 0, 0), Vector(1, 1, 1), Material())
 
-        self.player = Player(self.shader, Point(9, 0, 9))
+        self.player = Player(self.shader, Point(9, 0, 9), sensitivity=self.config.sensitivity)
         if self.is_networking:
             init = self.server.do_initial_exchange()
             self.player.network_uid = init
@@ -162,12 +162,6 @@ class StartGame:
         # Update all objects in the scene, including the player
         self.game_objects.update_objects(delta_time)
         self.player.update(delta_time, self.game_objects)
-        
-        # Networking stuff
-        if self.is_networking:
-            pass
-            # self.server.send_on_next_update(self.player)
-            #self.server.send(self.player.serialize())
 
     def display(self):
         # Make sure that the projection is in perspective
