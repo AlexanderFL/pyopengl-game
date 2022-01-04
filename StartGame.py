@@ -49,20 +49,6 @@ class StartGame:
 
         self.modelMatrix    = ModelMatrix()
 
-        g_ambient = Color(10/255, 10/255, 10/255, 1.0)
-
-        self.light_yellow = LightSource(Point(9, 0, 9), Color(1.0, 193/255, 7/255, 1), Color(1.0, 193/255, 7/255, 1.0), g_ambient)
-        self.light_yellow.set_light_in_shader(self.shader, 0)
-
-        self.light_green = LightSource(Point(-9, 0, -9), Color(0.0, 250/255, 7/255, 1), Color(0.0, 250/255, 7/255, 1), g_ambient)
-        self.light_green.set_light_in_shader(self.shader, 1)
-
-        self.light_blue = LightSource(Point(-9, 0, 9), Color(5/255, 20/255, 250/255, 1), Color(5/255, 20/255, 250/255, 1), g_ambient)
-        self.light_blue.set_light_in_shader(self.shader, 2)
-
-        self.light_red = LightSource(Point(9, 0, -9), Color(240/255, 20/255, 7/255, 1), Color(240/255, 20/255, 7/255, 1), g_ambient)
-        self.light_red.set_light_in_shader(self.shader, 3)
-
         self.clock = pygame.time.Clock()
         self.clock.tick()
 
@@ -81,9 +67,24 @@ class StartGame:
         self.enemy_list : List[Enemy] = []
 
     def initializeGameObjects(self):
+        # Lights are not a part of game objects, but still need to be set in the shader
+        g_ambient = Color(10/255, 10/255, 10/255, 1.0)
+
+        self.light_yellow = LightSource(Point(9, 0, 9), Color(1.0, 193/255, 7/255, 1), Color(1.0, 193/255, 7/255, 1.0), g_ambient)
+        self.light_yellow.set_light_in_shader(self.shader, 0)
+
+        self.light_green = LightSource(Point(-9, 0, -9), Color(0.0, 250/255, 7/255, 1), Color(0.0, 250/255, 7/255, 1), g_ambient)
+        self.light_green.set_light_in_shader(self.shader, 1)
+
+        self.light_blue = LightSource(Point(-9, 0, 9), Color(5/255, 20/255, 250/255, 1), Color(5/255, 20/255, 250/255, 1), g_ambient)
+        self.light_blue.set_light_in_shader(self.shader, 2)
+
+        self.light_red = LightSource(Point(9, 0, -9), Color(240/255, 20/255, 7/255, 1), Color(240/255, 20/255, 7/255, 1), g_ambient)
+        self.light_red.set_light_in_shader(self.shader, 3)
+
+        # Setting rest of game objects
         self.level1 = Level1(self.shader, Point(-10, 0, -10))
         self.floor = Floor(self.shader, Point(0, -0.5, 0), Vector(0,0,0), Vector(20, 0.1, 20), Material())
-        # self.enemy = Enemy(self.shader, Point(8, -0.15, 7), Vector(0, 0, 0), Vector(1, 1, 1), Material())
 
         self.player = Player(self.shader, Point(9, 0, 9), sensitivity=self.config.sensitivity)
         if self.is_networking:
@@ -99,7 +100,6 @@ class StartGame:
         self.game_objects = GameObjects()
         self.game_objects.add_object(self.level1)
         self.game_objects.add_object(self.floor)
-        # self.game_objects.add_object(self.enemy)
 
     def update(self):
         delta_time = self.clock.tick() / 1000.0
@@ -179,7 +179,7 @@ class StartGame:
         self.player.update(delta_time, self.game_objects)
 
     def display(self):
-        # Make sure that the projection is in perspective
+        # Make sure that the camera projection is in perspective
         self.player.camera.projection_matrix.set_perspective(3.14159/2, G_SCREEN_WIDTH/G_SCREEN_HEIGHT, 0.001, 100)
         if self.is_networking:
             glClearColor(66/255, 135/255, 245/255, 1.0)

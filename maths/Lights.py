@@ -12,6 +12,7 @@ class LightSource:
         self.specular = specular
     
     def set_light_in_shader(self, shader, index):
+        shader.use()
         shader.set_light_position(self.position, index)
         shader.set_light_diffuse(self.diffuse, index)
         shader.set_light_specular(self.specular, index)
