@@ -14,13 +14,12 @@ class GameObject:
     """
     def __init__(self, shader : Shader3D, position : Point, rotation : Vector, scale : Vector, material : Material, visible=True) -> None:
         """
-        GameObject's __init__
-        shader - The shader that will be used to communicate with GLSL shader files
-        positon - The position of the game object, expects Point
-        rotation - The rotation of the game object, expects Vector
-        scale - The scale of the game object, expects Vector
-        material - The material of the game object, expects Material
-        visible - Boolean if the object is visible or not (True by default)
+        @param 'shader' - The shader that will be used to communicate with GLSL shader files
+        @param 'positon' - The position of the game object, expects Point
+        @param 'rotation' - The rotation of the game object, expects Vector
+        @param 'scale' - The scale of the game object, expects Vector
+        @param 'material' - The material of the game object, expects Material
+        @param 'visible' - Boolean if the object is visible or not (True by default)
         """
         if type(position) != Point:
             raise Exception("Incorrect type 'position' for GameObject, expected a Point")

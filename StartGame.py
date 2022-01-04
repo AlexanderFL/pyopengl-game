@@ -88,12 +88,10 @@ class StartGame:
         self.floor = Floor(self.shader, Point(0, -0.5, 0), Vector(0,0,0), Vector(20, 0.1, 20), Material())
         # self.enemy = Enemy(self.shader, Point(8, -0.15, 7), Vector(0, 0, 0), Vector(1, 1, 1), Material())
 
+        self.player = Player(self.shader, Point(9, 0, 9))
         if self.is_networking:
             init = self.server.do_initial_exchange()
-            self.player = Player(self.shader, Point(9, 0, 9), network=self.server)
             self.player.network_uid = init
-        else:
-            self.player = Player(self.shader, Point(9, 0, 9), network=None)
         
         obj_file_path = sys.path[0] + "\\models"
         obj_file_name = "crate.obj"

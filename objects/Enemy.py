@@ -37,11 +37,6 @@ class Enemy(GameObject):
     
     def update(self, delta_time, game_objects) -> None:
         pass
-        # self.rotation.y += delta_time
-
-        # WIP
-        #collision_objects = game_objects.check_collision(Point(self.x, self.y, self.z))
-        #print(collision_objects)
     
     def draw(self, modelMatrix) -> GameObject:
         self._draw(modelMatrix, self.model)
