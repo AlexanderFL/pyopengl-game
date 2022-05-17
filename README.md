@@ -1,5 +1,3 @@
-# Alexander Freyr Lúðvíksson
-
 Developed using Python 3.9.0, pygame 2.0.1 and pyopengl version 3.1.5
 
 ## Setup
