@@ -1,4 +1,4 @@
-# Alexander Freyr Lúðvíksson - alexanderl17@ru.is
+# Game client
 
 Developed using Python 3.9.0, pygame 2.0.1 and pyopengl version 3.1.5
 
